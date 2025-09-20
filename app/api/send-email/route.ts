@@ -1,7 +1,7 @@
-/* import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { MyUser } from "@/models/user";
-import { getAllUsersFromDb } from "@/lib/firebase/database-functions/getAllUsersFromDb";
-import { getFollowedArtistsFromDbAdmin } from "@/lib/firebase/database-functions/getFollowedArtistsFromDb-admin";
+import { getAllUsersFromDbAdmin } from "@/lib/firebase/database-functions/userFunctionsToDbAdmin";
+import { getFollowedArtistsFromDbAdmin } from "@/lib/firebase/database-functions/artistFunctionsToDbAdmin";
 import { Album } from "@/models/album";
 import { Artist } from "@/models/artist";
 import { delay } from "@/lib/utils/delay";
@@ -12,10 +12,10 @@ import { getArtistAlbums } from "@/lib/spotify/getArtistAlbums";
 export async function POST(req: NextRequest) {
 	const today = new Date();
 	const sevenDaysAgo = new Date();
-	sevenDaysAgo.setDate(today.getDate() - 7);
+	sevenDaysAgo.setDate(today.getDate() - 15);
 
 	try {
-		const users: MyUser[] | undefined = await getAllUsersFromDb();
+		const users = await getAllUsersFromDbAdmin();
 		console.log("📦 Utenti trovati nel DB:", users?.length ?? 0);
 
 		if (!users || users.length === 0) {
@@ -58,19 +58,13 @@ export async function POST(req: NextRequest) {
 					`🎵 Fetching album per artista: ${artist.name || artist.id}`
 				);
 
-				const albums = await getArtistAlbums(artist.id, "album");
-				if (!albums) {
-					console.error(`❌ Errore fetch per artista ${artist.id}`);
-					continue;
-				}
+				const albums = artist.albums;
 
 				console.log(
 					`📀 Album totali trovati per ${artist.name || artist.id}: ${
 						albums.length
 					}`
 				);
-
-				await delay(2000);
 
 				artist.albums = albums.filter((album) => {
 					const releaseDate = new Date(album.release_date);
@@ -104,4 +98,3 @@ export async function POST(req: NextRequest) {
 		);
 	}
 }
- */
