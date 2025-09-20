@@ -45,7 +45,7 @@ export async function sendEmail(user: User, newAlbums: Album[], followedArtists:
     });
 
     await transporter.sendMail({
-      from: `"Tuo Nome" <${process.env.GMAIL_USER}>`,
+      from: `"" <${process.env.GMAIL_USER}>`,
       to,
       subject,
       html,
