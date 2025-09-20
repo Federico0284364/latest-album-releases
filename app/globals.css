@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@import "tailwindcss";
+
+
+*{
+  
+}
+
+
+@layer base {
+  :root {
+    --bg-dark: hsl(222, 100%, 3%);
+    --bg: hsl(216 76% 7%);
+    --bg-light: hsl(212 50% 9%);
+    --text: hsl(212 100% 97%);
+    --text-muted: hsl(212 45% 72%);
+    --highlight: hsl(212 29% 41%);
+    --border: hsl(212 37% 29%);
+    --border-muted: hsl(211 56% 19%);
+    --primary: hsl(212 77% 72%);
+    --secondary: hsl(34 60% 63%);
+    --danger: hsl(9, 62%, 45%);
+    --warning: hsl(52 22% 56%);
+    --success: hsl(148, 51%, 41%);
+    --info: hsl(217 34% 65%);
+  }
+}
+
+/* 2. Esposizione come design token per le utility Tailwind */
+@theme {
+  --color-dark: var(--bg-dark);
+  --color-medium: var(--bg);
+  --color-light: var(--bg-light);
+
+  --color-fg: var(--text);
+  --color-fg-muted: var(--text-muted);
+
+  --color-highlight: var(--highlight);
+
+  --color-border: var(--border);
+  --color-border-muted: var(--border-muted);
+
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
+  --color-info: var(--info);
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--bg) var(--bg-dark); /* Firefox: colore pollice e track */
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 80px; /* Chrome, Edge, Safari */
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: var(--bg-light);
+    border-radius: 9999px;
+    border: 20px solid #e5e7eb; /* optional padding */
+  }
+}
+
+body{
+  background-color: var(--bg-dark);
+  padding: 16px;
+}
+
+button{
+  cursor: pointer;
+}

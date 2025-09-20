@@ -1,0 +1,15 @@
+{
+  "cron": [
+    {
+      "path": "/api/send-email",
+      "schedule": "0 7 * * 1",
+      "enabled": true
+    }, 
+    {
+      "path": "/api/update-artists",
+      "schedule": "*/10 * * * *",
+      "enabled": true
+    }
+
+  ]
+}
