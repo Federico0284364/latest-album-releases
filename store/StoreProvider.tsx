@@ -12,15 +12,27 @@ import { saveUserDataToDb } from "@/lib/firebase/database-functions/userFunction
 
 export default function StoreProvider({ children }: { children: ReactNode }) {
 	const setUser = useSpotifyStore((state) => state.setUser);
+	const selectedArtist = useSpotifyStore((state) => state.selectedArtist);
+	const setSelectedArtist = useSpotifyStore(
+		(state) => state.setSelectedArtist
+	);
 	const setFollowedArtistsList = useSpotifyStore(
 		(state) => state.setFollowedArtistsList
 	);
-	const setNewAlbums = useSpotifyStore((state) => state.setNewAlbums)
+	const setNewAlbums = useSpotifyStore((state) => state.setNewAlbums);
 	const user = useSpotifyStore((state) => state.user);
 
 	useEffect(() => {
 		if (!user || !user.uid) {
+			if (!selectedArtist) {
+				setSelectedArtist(undefined);
+			}
 			setFollowedArtistsList([]);
+			setSelectedArtist({
+				...selectedArtist,
+				following: false,
+			} as Artist);
+
 			return;
 		}
 		saveUserDataToDb(user);
@@ -36,7 +48,7 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 				artist.albums.forEach((album) => {
 					albums.push(album);
 				});
-			});			
+			});
 			setNewAlbums(albums);
 		}
 

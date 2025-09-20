@@ -3,7 +3,6 @@
 import { create } from "zustand";
 import { Artist } from "@/models/artist";
 import { User } from "firebase/auth";
-import { toggleFollowArtist } from "@/lib/firebase/database-functions/toggleFollowArtist";
 import { Album, AlbumCollection } from "@/models/album";
 import { toggleFollowArtistToDb } from "@/lib/firebase/database-functions/followFunctionsToDb";
 
