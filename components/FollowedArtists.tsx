@@ -78,7 +78,7 @@ export default function FollowedArtists({ className }: Props) {
 			<h1>Followed Artists</h1>
 			<ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-2">
 				{newAlbums.map((album) => {
-					return <AlbumCard album={album} imageSrc={album.images?.[0]?.url} className="w-full" artistNameIsVisible={true} key={album.id}/>
+					return <AlbumCard album={album} imageSrc={album.images?.[0]?.url} className="w-full" artistNameIsVisible={true} key={'album' + album.id}/>
 				})}
 			</ul>
 			<motion.ul layout className="flex flex-col gap-1">

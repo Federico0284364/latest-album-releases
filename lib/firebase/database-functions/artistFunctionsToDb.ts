@@ -10,6 +10,7 @@ import {
 	getDoc,
 	deleteDoc,
 } from "firebase/firestore";
+import { adminDb } from "@/lib/firebase/admin/firebaseAdmin"; // Assicurati di avere l'Admin SDK configurata
 
 export async function saveArtistToDb(artist: Artist) {
 	try {
@@ -31,7 +32,9 @@ export async function getFollowedArtistsFromDb(
 		const followsSnapshot = await getDocs(
 			collection(db, `users/${userId}/artists`)
 		);
-		const artistIds = followsSnapshot.docs.map((doc) => doc.data().artistId);
+		const artistIds = followsSnapshot.docs.map(
+			(doc) => doc.data().artistId
+		);
 
 		if (artistIds.length === 0) return [];
 
@@ -61,3 +64,4 @@ export async function getFollowedArtistsFromDb(
 		);
 	}
 }
+
