@@ -2,21 +2,20 @@ import { NextResponse } from "next/server";
 
 export async function GET(
 	req: Request,
-	context: { params: { artistId: string } }
+	{ params }: { params: Promise<{ artistId: string }> }
 ) {
-	const artistId = context.params.artistId;
-
-	const { searchParams } = new URL(req.url);
-	const albumType = searchParams.get("include_groups");
-
-	try {
-		if (!artistId) {
+	const artistId = (await params).artistId;
+	if (!artistId) {
 		return NextResponse.json(
 			{ error: "Missing artist id" },
 			{ status: 400 }
 		);
 	}
-	
+
+	const { searchParams } = new URL(req.url);
+	const albumType = searchParams.get("include_groups");
+
+	try {
 		const tokenRes = await fetch(
 			`${process.env.NEXT_PUBLIC_BASE_URL}/api/spotify-token`,
 			{
@@ -65,4 +64,3 @@ export async function GET(
 		);
 	}
 }
-
