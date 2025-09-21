@@ -53,9 +53,10 @@ export async function toggleFollowArtistToDb(userId: string, artist: Artist) {
 }
 
 function updateLocalState(artist: Artist, following: boolean) {
+
 	useSpotifyStore.setState((state) => {
 		const updatedList = following
-			? [...state.followedArtistsList, artist]
+			? [...state.followedArtistsList, {...artist, following: false}]
 			: state.followedArtistsList.filter((a) => a.id !== artist.id);
 
 		return {
