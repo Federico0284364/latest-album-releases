@@ -70,13 +70,11 @@ export default function MainSection() {
 	}
 
 	async function handleToggle(artist: Artist) {
-		const previousSelectedArtist: Artist = { ...selectedArtist } as Artist;
-		const updatedArtist = { ...artist, following: !artist.following };
-		setSelectedArtist(updatedArtist);
+		
 		try {
-			await handleFollow(previousSelectedArtist);
+			await handleFollow(artist);
 		} catch (error) {
-			setSelectedArtist(previousSelectedArtist);
+			setSelectedArtist(artist);
 		}
 	}
 

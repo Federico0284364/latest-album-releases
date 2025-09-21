@@ -46,9 +46,8 @@ export default function FollowedArtists({ className }: Props) {
 	const followedArtistsList = useSpotifyStore(
 		(state) => state.followedArtistsList
 	);
-	const newAlbums = useSpotifyStore(
-		(state) => state.newAlbums
-	);
+	const newAlbums = useSpotifyStore((state) => state.newAlbums);
+	const handleFollow = useSpotifyStore((state) => state.handleFollow);
 
 	const [numberOfAlbums, setNumberOfAlbums] = useState<number>();
 	const [openArtist, setOpenArtist] = useState<Artist>();
@@ -60,14 +59,13 @@ export default function FollowedArtists({ className }: Props) {
 		setOpenArtist(artist);
 	}
 
-	async function handleUnfollow(id: string) {
-		if (!user) return;
-		const artist = followedArtistsList.find((art) => art.id === id);
+	async function handleUnfollow(artistId: string) {
+		const artist = followedArtistsList.find((art) => art.id === artistId);
+		if (!user || !artist) return;
 		const previousOpenArtist = { ...openArtist } as Artist;
 		setOpenArtist(undefined);
 		try {
-			await toggleFollowArtistToDb(user?.uid, artist!);
-			
+			await handleFollow({...artist, following: true});
 		} catch (error) {
 			setOpenArtist(previousOpenArtist);
 		}
@@ -78,7 +76,15 @@ export default function FollowedArtists({ className }: Props) {
 			<h1>Followed Artists</h1>
 			<ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-2">
 				{newAlbums.map((album) => {
-					return <AlbumCard album={album} imageSrc={album.images?.[0]?.url} className="w-full" artistNameIsVisible={true} key={'album' + album.id}/>
+					return (
+						<AlbumCard
+							album={album}
+							imageSrc={album.images?.[0]?.url}
+							className="w-full"
+							artistNameIsVisible={true}
+							key={"album" + album.id}
+						/>
+					);
 				})}
 			</ul>
 			<motion.ul layout className="flex flex-col gap-1">

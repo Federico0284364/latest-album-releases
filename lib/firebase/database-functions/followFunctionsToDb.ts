@@ -17,9 +17,8 @@ export async function toggleFollowArtistToDb(userId: string, artist: Artist) {
 
 	const previousSelectedArtist = { ...selectedArtist } as Artist;
 	const previousFollowedList: Artist[] = [...followedArtistsList];
-	const updatedArtist: Artist = { ...artist, following: !artist.following };
 
-	updateLocalState(updatedArtist, updatedArtist.following);
+	updateLocalState(artist);
 
 	try {
 		if (!userId || !artist?.id) {
@@ -52,15 +51,16 @@ export async function toggleFollowArtistToDb(userId: string, artist: Artist) {
 	}
 }
 
-function updateLocalState(artist: Artist, following: boolean) {
+function updateLocalState(artist: Artist) {
 
 	useSpotifyStore.setState((state) => {
-		const updatedList = following
-			? [...state.followedArtistsList, {...artist, following: false}]
+		const updatedArtist = {...artist, following: !artist.following};
+		const updatedList = updatedArtist.following
+			? [...state.followedArtistsList, {...updatedArtist}]
 			: state.followedArtistsList.filter((a) => a.id !== artist.id);
 
 		return {
-			selectedArtist: artist,
+			selectedArtist: updatedArtist,
 			followedArtistsList: updatedList,
 		};
 	});
