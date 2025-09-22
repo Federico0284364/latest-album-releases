@@ -34,12 +34,17 @@ export async function POST(req: NextRequest) {
 					uid: user.uid,
 					email: user.email,
 					name: user.displayName,
+					subscribedToEmails: user.subscribedToEmails,
 					followedArtists: followedArtists as Artist[],
 				} as MyUser;
 			})
 		);
 
 		for (const user of usersData) {
+			if (!user.subscribedToEmails){
+				continue;
+			}
+			
 			const followedArtists = user.followedArtists;
 			let newAlbums: Album[] = [];
 			let oldAlbums: Album[] = [];
