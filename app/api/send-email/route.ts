@@ -12,14 +12,12 @@ import { getArtistAlbums } from "@/lib/spotify/getArtistAlbums";
 export async function POST(req: NextRequest) {
 	const today = new Date();
 	const sevenDaysAgo = new Date();
-	sevenDaysAgo.setDate(today.getDate() - 15);
+	sevenDaysAgo.setDate(today.getDate() - 7);
 
 	try {
 		const users = await getAllUsersFromDbAdmin();
-		console.log("📦 Utenti trovati nel DB:", users?.length ?? 0);
 
 		if (!users || users.length === 0) {
-			console.log("❌ Nessun utente trovato.");
 			return NextResponse.json(
 				{ error: "Nessun utente trovato" },
 				{ status: 404 }
@@ -31,12 +29,11 @@ export async function POST(req: NextRequest) {
 				const followedArtists = await getFollowedArtistsFromDbAdmin(
 					user.uid
 				);
-				console.log(
-					`👤 Utente: ${user.email} | Artisti seguiti: ${followedArtists.length}`
-				);
+
 				return {
 					uid: user.uid,
 					email: user.email,
+					name: user.displayName,
 					followedArtists: followedArtists as Artist[],
 				} as MyUser;
 			})
@@ -44,45 +41,33 @@ export async function POST(req: NextRequest) {
 
 		for (const user of usersData) {
 			const followedArtists = user.followedArtists;
-			const newAlbums: Album[] = [];
+			let newAlbums: Album[] = [];
+			let oldAlbums: Album[] = [];
 
 			if (!followedArtists || followedArtists.length === 0) {
-				console.log(
-					`⚠️ Utente ${user.email} non segue nessun artista.`
-				);
 				continue;
 			}
 
 			for (const artist of followedArtists) {
-				console.log(
-					`🎵 Fetching album per artista: ${artist.name || artist.id}`
-				);
-
 				const albums = artist.albums;
 
-				console.log(
-					`📀 Album totali trovati per ${artist.name || artist.id}: ${
-						albums.length
-					}`
+				newAlbums.push(
+					...albums.filter((album) => {
+						const releaseDate = new Date(album.release_date);
+						return isWithinLastDays(releaseDate, 7);
+					})
 				);
 
-				artist.albums = albums.filter((album) => {
-					const releaseDate = new Date(album.release_date);
-					return isWithinLastDays(releaseDate, 15);
-				});
-
-				console.log(
-					`🆕 Nuovi album di ${
-						artist.name || artist.id
-					} (ultimi 7 giorni): ${artist.albums.length}`
+				oldAlbums.push(
+					...albums.filter((album) => {
+						const releaseDate = new Date(album.release_date);
+						return !isWithinLastDays(releaseDate, 365);
+					})
 				);
-				newAlbums.push(...artist.albums);
 			}
 
-			console.log(
-				`📧 Invio email a ${user.email} con ${newAlbums.length} nuovi album.`
-			);
-			await sendEmail(user, newAlbums, followedArtists);
+			oldAlbums = oldAlbums.sort(() => Math.random() - 0.5).slice(0, 3);
+			await sendEmail(user, newAlbums, oldAlbums);
 		}
 
 		console.log("✅ Email inviate con successo.");

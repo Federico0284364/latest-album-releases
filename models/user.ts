@@ -3,4 +3,5 @@ import { Artist } from "./artist";
 
 export type MyUser = User & {
   followedArtists?: Artist[]
+  name?: string
 }
