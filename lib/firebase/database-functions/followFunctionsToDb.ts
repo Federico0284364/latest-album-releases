@@ -1,6 +1,5 @@
 import { db } from "@/lib/firebase/firestore";
 import { doc, runTransaction } from "firebase/firestore";
-import { saveArtistToDb } from "./artistFunctionsToDb";
 import type { Artist } from "@/models/artist";
 import { useSpotifyStore } from "@/store/store";
 

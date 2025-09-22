@@ -7,7 +7,6 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Button from "./Button";
 import Image from "next/image";
-import { unfollowArtist } from "@/lib/firebase/database-functions/unfollowArtist";
 import AlbumCard from "./AlbumCard";
 import { sortAlbumsBy } from "@/lib/utils/query-albums/sorting";
 import { makeDatePretty } from "@/lib/utils/date";

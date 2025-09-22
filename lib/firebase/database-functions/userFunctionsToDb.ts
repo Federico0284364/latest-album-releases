@@ -1,9 +1,8 @@
 
 import { db } from "@/lib/firebase/firestore";
-import { Artist } from "@/models/artist";
-import { setDoc, doc, getDocs } from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
 import type { User } from "firebase/auth";
-import { adminDb } from "../admin/firebaseAdmin";
+
 
 export async function saveUserDataToDb(user: User) {
 	try {

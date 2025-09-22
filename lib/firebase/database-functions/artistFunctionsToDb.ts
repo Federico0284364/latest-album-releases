@@ -7,10 +7,7 @@ import {
 	getDocs,
 	doc,
 	setDoc,
-	getDoc,
-	deleteDoc,
 } from "firebase/firestore";
-import { adminDb } from "@/lib/firebase/admin/firebaseAdmin"; // Assicurati di avere l'Admin SDK configurata
 
 export async function saveArtistToDb(artist: Artist) {
 	try {
