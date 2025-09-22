@@ -16,21 +16,23 @@ export async function sendEmail(user: MyUser, newAlbums: Album[], oldAlbums: Alb
 	let albumsListHTML: string = "";
 
 		albumsListHTML = albumsList
-			.map((album) => {
-				return `
+    .map((album) => {
+      return `
         <li>
           <a href="${album.external_urls.spotify}">
-            <img src="${album.images[0]?.url || ""}" alt="${
-					album.name
-				}" style="width:100px; vertical-align:middle; margin-right:10px; margin-bottom:12px" />
-            <strong>${album.name}</strong> by <em>${
-					album.artists[0]?.name || "Unknown artist"
-				}</em> (${new Date(album.release_date).toLocaleDateString('it-IT', {year: 'numeric'})})
+						<div style="display:flex">
+							<img src="${album.images[0]?.url || ''}" alt="${album.name}" style="width:100px; vertical-align:middle; margin-right:10px; margin-bottom:12px" />
+							<div>
+								<strong>${album.name}</strong>
+								<p>by ${album.artists[0]?.name || "Unknown artist"}</p>
+								<p> (${new Date(album.release_date).toLocaleDateString('it-IT', {year: 'numeric'})})</p>
+							</div>
+						</div>
           </a>
         </li>
       `;
-			})
-			.join("");
+    })
+    .join("");
 	
 
 	let html: string = "";
@@ -48,7 +50,7 @@ export async function sendEmail(user: MyUser, newAlbums: Album[], oldAlbums: Alb
 		html = `
     <h2>Good morning, ${user.name}</h2>
     <p>Unfortunately nothing came out last week :(</p>
-    <p>In the meantime you can always take a trip down memory lane with this records:</p>
+    <p>In the meantime you can always take a trip down memory lane with these records:</p>
     <ul>
       ${albumsListHTML}
     </ul>
