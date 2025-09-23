@@ -49,7 +49,11 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 					albums.push(album);
 				});
 			});
-			setNewAlbums(albums);
+			const uniqueAlbums = albums.filter(
+				(album, index, self) =>
+					index === self.findIndex((a) => a.id === album.id)
+			);
+			setNewAlbums(uniqueAlbums);
 		}
 
 		fetchFollowedArtistsList(user.uid);

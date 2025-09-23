@@ -7,9 +7,10 @@ import { AnimatePresence, motion } from "framer-motion";
 
 type Props = {
 	children: ReactNode;
+	className?: string
 };
 
-export default function DrawerMenu({ children }: Props) {
+export default function DrawerMenu({ children, className }: Props) {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 
 	function handleClick() {
@@ -30,7 +31,7 @@ export default function DrawerMenu({ children }: Props) {
   }, [isOpen]);
 
 	return (
-		<div>
+		<div className={className}>
 			<MenuButton onClick={handleClick} isOpen={isOpen}/>
 
 			<AnimatePresence>

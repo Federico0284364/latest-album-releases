@@ -4,7 +4,7 @@ import Input from "./Input";
 import Button from "./Button";
 import ArtistCard from "./ArtistCard";
 import { useSpotifyStore } from "@/store/store";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { ChangeEvent } from "react";
 import { getArtist } from "@/lib/spotify/getArtist";
 import Spinner from "./Spinner";
@@ -31,6 +31,7 @@ export default function MainSection() {
 	);
 	const handleFollow = useSpotifyStore((state) => state.handleFollow);
 
+
 	async function handleSearchArtist() {
 		if (!inputHasChanged) {
 			return;
@@ -38,12 +39,14 @@ export default function MainSection() {
 		setInputHasChanged(false);
 		startFetchingArtist(async () => {
 			try {
-				const artistData: Artist | undefined = await getArtist({name: inputValue});
+				const artistData: Artist | undefined = await getArtist({
+					name: inputValue,
+				});
 				if (!artistData) {
 					setSelectedArtist(undefined);
 					return;
 				}
-				
+
 				router.push(`/?name=${encodeURIComponent(artistData?.name)}`);
 
 				const following = followedArtistsList.some(
@@ -70,7 +73,6 @@ export default function MainSection() {
 	}
 
 	async function handleToggle(artist: Artist) {
-		
 		try {
 			await handleFollow(artist);
 		} catch (error) {
@@ -94,7 +96,7 @@ export default function MainSection() {
 		console.log("email:", res);
 	}
 
-	async function handleUpdateArtists(){
+	async function handleUpdateArtists() {
 		const res = await fetch("/api/update-artists", {
 			method: "GET",
 			headers: {
@@ -113,8 +115,21 @@ export default function MainSection() {
 			<Button className="text-lg" onClick={handleUpdateArtists}>
 				Update Artists
 			</Button>
-			<Input onChange={handleInput} value={inputValue} />
-			<Button className="mb-2 text-lg" onClick={handleSearchArtist} disabled={isFetchingArtist || !inputHasChanged}>
+			<Input
+				onChange={handleInput}
+				value={inputValue}
+				onKeyDown={(e) => {
+					if (e.key === "Enter") {
+						e.preventDefault();
+						handleSearchArtist();
+					}
+				}}
+			/>
+			<Button
+				className="mb-2 text-lg"
+				onClick={handleSearchArtist}
+				disabled={isFetchingArtist || !inputHasChanged}
+			>
 				Get Artist
 			</Button>
 			<div className="w-[90%]">
@@ -139,7 +154,7 @@ export default function MainSection() {
 								{selectedArtist.albums?.map((album) => {
 									return (
 										<AlbumCard
-											key={'/' + album.id}
+											key={"/" + album.id}
 											className="w-full"
 											imageSrc={album.images[0].url}
 											album={album}

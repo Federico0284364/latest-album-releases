@@ -34,8 +34,14 @@ export default function RootLayout({
 				<StoreProvider>
 					<header className="flex items-center justify-between">
 						<CustomLogin />
-						<nav className="flex gap-2 text-fg items-center md:mr-4">
-							<DrawerMenu>
+						<nav className="flex gap-2 flex-1 max-w-100 text-fg justify-end sm:mr-4">
+							<div className="hidden sm:flex flex-1 gap-8 justify-end">
+								<NavLink href={'/'}>Search</NavLink>
+								<NavLink href={'/followed-artists'}>Your artists</NavLink>
+								<NavLink href={'/latest-releases'}>Latest releases</NavLink>
+							</div>
+							
+							<DrawerMenu className="sm:hidden">
 								<NavLink href={'/'}>Search</NavLink>
 								<NavLink href={'/followed-artists'}>Your artists</NavLink>
 								<NavLink href={'/latest-releases'}>Latest releases</NavLink>
