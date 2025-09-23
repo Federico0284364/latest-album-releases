@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "@/store/StoreProvider";
 import CustomLogin from "@/components/CustomLogin";
+import DrawerMenu from "@/components/DrawerMenu";
 import NavLink from "@/components/NavLink";
 
 const geistSans = Geist({
@@ -33,17 +34,11 @@ export default function RootLayout({
 				<StoreProvider>
 					<header className="flex items-center justify-between">
 						<CustomLogin />
-						<nav className="flex gap-8 text-fg items-center mr-4">
-							<NavLink href="/">
-								<span>Home</span>
-							</NavLink>
-							<NavLink href="/followed-artists">
-								<span>
-									Your
-									<br />
-									Artists
-								</span>
-							</NavLink>
+						<nav className="flex gap-2 text-fg items-center md:mr-4">
+							<DrawerMenu>
+								<NavLink href={'/'}>Home</NavLink>
+								<NavLink href={'/followed-artists'}>Your artists</NavLink>
+							</DrawerMenu>
 						</nav>
 					</header>
 					<hr className="bg-fg mt-3 h-0.5" />

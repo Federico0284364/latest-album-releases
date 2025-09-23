@@ -7,7 +7,6 @@
   
 }
 
-
 @layer base {
   :root {
     --bg-dark: hsl(222, 100%, 3%);
@@ -74,4 +73,14 @@ body{
 
 button{
   cursor: pointer;
+  transition: 125ms;
+}
+
+button:hover{
+  opacity: 85
+}
+
+button:active{
+  opacity: 75;
+  transform: scale(0.95);
 }
