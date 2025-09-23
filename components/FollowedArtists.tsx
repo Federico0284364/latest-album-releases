@@ -45,7 +45,7 @@ export default function FollowedArtists({ className }: Props) {
 	const followedArtistsList = useSpotifyStore(
 		(state) => state.followedArtistsList
 	);
-	const newAlbums = useSpotifyStore((state) => state.newAlbums);
+	
 	const handleFollow = useSpotifyStore((state) => state.handleFollow);
 
 	const [numberOfAlbums, setNumberOfAlbums] = useState<number>();
@@ -72,20 +72,7 @@ export default function FollowedArtists({ className }: Props) {
 
 	return (
 		<aside className={twMerge("", className)}>
-			<h1>Followed Artists</h1>
-			<ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-				{newAlbums.map((album) => {
-					return (
-						<AlbumCard
-							album={album}
-							imageSrc={album.images?.[0]?.url}
-							className="w-full"
-							artistNameIsVisible={true}
-							key={"album" + album.id}
-						/>
-					);
-				})}
-			</ul>
+			
 			<motion.ul layout className="flex flex-col gap-1">
 				{followedArtistsList?.map((artist) => {
 					return (
@@ -106,7 +93,7 @@ export default function FollowedArtists({ className }: Props) {
 										</legend>
 										{albums?.map((album) => {
 											return (
-												<li key={album.id}>
+												<li key={'a' + album.id}>
 													<a
 														className="flex-col flex"
 														href={

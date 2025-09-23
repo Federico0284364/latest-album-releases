@@ -38,6 +38,7 @@ export default function RootLayout({
 							<DrawerMenu>
 								<NavLink href={'/'}>Search</NavLink>
 								<NavLink href={'/followed-artists'}>Your artists</NavLink>
+								<NavLink href={'/latest-releases'}>Latest releases</NavLink>
 							</DrawerMenu>
 						</nav>
 					</header>

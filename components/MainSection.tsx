@@ -139,7 +139,7 @@ export default function MainSection() {
 								{selectedArtist.albums?.map((album) => {
 									return (
 										<AlbumCard
-											key={album.id}
+											key={'/' + album.id}
 											className="w-full"
 											imageSrc={album.images[0].url}
 											album={album}

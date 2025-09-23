@@ -34,7 +34,7 @@ export default function AlbumCard({
 				<ul className={artistNameIsVisible ? 'mb-2' : 'mb-2'}>
 					{artistNameIsVisible &&
 						album.artists.map((artist) => (
-							<h3 className="text-md text-fg-muted">{artist.name}</h3>
+							<h3 key={'album card' + artist.id} className="text-md text-fg-muted">{artist.name}</h3>
 						))}
 				</ul>
 				<p className="text-fg-muted flex justify-between text-sm">
