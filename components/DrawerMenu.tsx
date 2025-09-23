@@ -1,6 +1,6 @@
 "use client";
 import { ReactNode } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MenuButton from "./MenuButton";
 import Card from "./Card";
 import { AnimatePresence, motion } from "framer-motion";
@@ -16,6 +16,19 @@ export default function DrawerMenu({ children }: Props) {
 		setIsOpen((prevState) => !prevState);
 	}
 
+	useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    // Pulizia al dismount
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
 	return (
 		<div>
 			<MenuButton onClick={handleClick} isOpen={isOpen}/>
@@ -27,7 +40,7 @@ export default function DrawerMenu({ children }: Props) {
 						initial={{ x: 1000 }}
 						animate={{ x: 0 }}
 						transition={{ type: "tween" }}
-						className="text-xl origin-top p-6 flex flex-col bg-dark absolute right-0 top-26 bottom-0 w-[100vw] whitespace-nowrap"
+						className="text-xl origin-top p-6 flex flex-col bg-dark fixed right-0 top-26 bottom-0 w-[100vw] whitespace-nowrap"
 						exit={{ x: 1000 }}
 					>
 						{children}

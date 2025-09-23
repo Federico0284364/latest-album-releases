@@ -36,7 +36,7 @@ export default function RootLayout({
 						<CustomLogin />
 						<nav className="flex gap-2 text-fg items-center md:mr-4">
 							<DrawerMenu>
-								<NavLink href={'/'}>Home</NavLink>
+								<NavLink href={'/'}>Search</NavLink>
 								<NavLink href={'/followed-artists'}>Your artists</NavLink>
 							</DrawerMenu>
 						</nav>
