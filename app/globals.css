@@ -84,3 +84,13 @@ button:active{
   opacity: 75;
   transform: scale(0.95);
 }
+
+button:hover{
+  opacity: 85
+}
+
+button:active{
+  opacity: 75;
+  scale: 0.95;
+  transition: 0.5;
+}
