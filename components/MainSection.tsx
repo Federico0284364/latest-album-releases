@@ -114,7 +114,7 @@ export default function MainSection() {
 				Update Artists
 			</Button>
 			<Input onChange={handleInput} value={inputValue} />
-			<Button className="mb-2 text-lg" onClick={handleSearchArtist}>
+			<Button className="mb-2 text-lg" onClick={handleSearchArtist} disabled={isFetchingArtist || !inputHasChanged}>
 				Get Artist
 			</Button>
 			<div className="w-[90%]">
