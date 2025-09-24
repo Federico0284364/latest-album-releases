@@ -39,10 +39,6 @@ export default function Settings() {
 		await saveSettingsToDb(user.uid, section, key, value);
 	}
 
-	if (!user || !user.uid){
-		return;
-	}
-
 	return (
 		<>
 			<Section title={"E-mails"}>

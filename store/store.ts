@@ -18,13 +18,19 @@ type SpotifyStore = {
 
 	setUser(user: MyUser | null): void;
 	setSettings(settings: Settings): void;
-	updateSetting<S extends keyof Settings, K extends keyof Settings[S]>(section: S, key: K, value: Settings[S][K]): void;
+	updateSetting<S extends keyof Settings, K extends keyof Settings[S]>(
+		section: S,
+		key: K,
+		value: Settings[S][K]
+	): void;
 	setInputValue(value: string): void;
 	setSelectedArtist(artist?: Artist): void;
 	setFollowedArtistsList(artists: Artist[]): void;
 	setNewAlbums(albums: Album[]): void;
 
 	handleFollow(artist: Artist): Promise<void>;
+
+	resetStore: () => void;
 };
 
 export const useSpotifyStore = create<SpotifyStore>((set, get) => {
@@ -36,7 +42,10 @@ export const useSpotifyStore = create<SpotifyStore>((set, get) => {
 		set({ settings });
 	}
 
-	function updateSetting<S extends keyof Settings, K extends keyof Settings[S]>(section: S, key: K, value: Settings[S][K]) {
+	function updateSetting<
+		S extends keyof Settings,
+		K extends keyof Settings[S]
+	>(section: S, key: K, value: Settings[S][K]) {
 		const settings = get().settings;
 		set({
 			settings: {
@@ -80,6 +89,14 @@ export const useSpotifyStore = create<SpotifyStore>((set, get) => {
 			throw error;
 		}
 	}
+	function resetStore(){
+			set({
+				user: null,
+				selectedArtist: undefined,
+				followedArtistsList: [],
+				newAlbums: [],
+				settings: {} as Settings,
+			})}
 
 	return {
 		user: null,
@@ -102,5 +119,7 @@ export const useSpotifyStore = create<SpotifyStore>((set, get) => {
 		setNewAlbums,
 
 		handleFollow,
+
+		resetStore
 	};
 });

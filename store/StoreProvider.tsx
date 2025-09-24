@@ -24,6 +24,7 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 	);
 	const setNewAlbums = useSpotifyStore((state) => state.setNewAlbums);
 	const setSettings = useSpotifyStore(state => state.setSettings);
+	const resetStore = useSpotifyStore(state => state.resetStore)
 
 
 	useEffect(() => {
@@ -71,6 +72,9 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+			if (!currentUser){
+				resetStore();
+			}
 			setUser(currentUser);
 		});
 		return () => unsubscribe();
