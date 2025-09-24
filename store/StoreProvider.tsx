@@ -9,8 +9,11 @@ import { auth } from "@/lib/firebase/firestore";
 import { getToken } from "@/lib/spotify/getToken";
 import { getFollowedArtistsFromDb } from "@/lib/firebase/database-functions/artistFunctionsToDb";
 import { saveUserDataToDb } from "@/lib/firebase/database-functions/userFunctionsToDb";
+import { getSettingsFromDb, saveSettingsToDb } from "@/lib/firebase/database-functions/settingFunctionsToDb";
+import { Settings } from "@/models/settings";
 
 export default function StoreProvider({ children }: { children: ReactNode }) {
+	const user = useSpotifyStore((state) => state.user);
 	const setUser = useSpotifyStore((state) => state.setUser);
 	const selectedArtist = useSpotifyStore((state) => state.selectedArtist);
 	const setSelectedArtist = useSpotifyStore(
@@ -20,7 +23,8 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 		(state) => state.setFollowedArtistsList
 	);
 	const setNewAlbums = useSpotifyStore((state) => state.setNewAlbums);
-	const user = useSpotifyStore((state) => state.user);
+	const setSettings = useSpotifyStore(state => state.setSettings);
+
 
 	useEffect(() => {
 		if (!user || !user.uid) {
@@ -56,7 +60,13 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 			setNewAlbums(uniqueAlbums);
 		}
 
+		async function fetchSettings(userId: string){
+			const settings: Settings = await getSettingsFromDb(userId);
+			setSettings(settings);
+		}
+
 		fetchFollowedArtistsList(user.uid);
+		fetchSettings(user.uid)
 	}, [user]);
 
 	useEffect(() => {
