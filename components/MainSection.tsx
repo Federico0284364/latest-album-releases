@@ -4,19 +4,16 @@ import Input from "./Input";
 import Button from "./Button";
 import ArtistCard from "./ArtistCard";
 import { useSpotifyStore } from "@/store/store";
-import { useState, useTransition, useEffect } from "react";
+import { useState, useTransition, useMemo, useEffect } from "react";
 import { ChangeEvent } from "react";
 import { getArtist } from "@/lib/spotify/getArtist";
 import Spinner from "./Spinner";
 import { getArtistAlbums } from "@/lib/spotify/getArtistAlbums";
 import { Artist } from "@/models/artist";
 import AlbumCard from "./AlbumCard";
-import { useRouter } from "next/navigation";
 import type { AlbumType } from "@/lib/spotify/getArtistAlbums";
-import { sendEmail } from "@/lib/email/send-email";
 
 export default function MainSection() {
-	const router = useRouter();
 	const [albumFilter, setAlbumFilter] = useState<AlbumType>("any");
 	const [isFetchingArtist, startFetchingArtist] = useTransition();
 	const [inputValue, setInputvalue] = useState("");
@@ -31,6 +28,13 @@ export default function MainSection() {
 	);
 	const handleFollow = useSpotifyStore((state) => state.handleFollow);
 
+	const following = useMemo(
+		() =>
+			followedArtistsList.some(
+				(artist) => artist.id === selectedArtist?.id
+			),
+		[user, selectedArtist, followedArtistsList]
+	);
 
 	async function handleSearchArtist() {
 		if (!inputHasChanged) {
@@ -47,12 +51,6 @@ export default function MainSection() {
 					return;
 				}
 
-				router.push(`/?name=${encodeURIComponent(artistData?.name)}`);
-
-				const following = followedArtistsList.some(
-					(artist) => artist.id === artistData.id
-				);
-
 				const albumsData = await getArtistAlbums(
 					artistData.id,
 					albumFilter
@@ -61,7 +59,6 @@ export default function MainSection() {
 				if (albumsData) {
 					setSelectedArtist({
 						...artistData,
-						following: following,
 						albums: albumsData,
 					});
 				}
@@ -146,6 +143,7 @@ export default function MainSection() {
 								className="md:flex-row items-center mb-4"
 								isLoggedIn={!!user}
 								onFollow={handleToggle}
+								following={following}
 								artist={selectedArtist}
 								key={selectedArtist.id}
 								imageSrc={selectedArtist.images[0].url}

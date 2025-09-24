@@ -10,6 +10,7 @@ import Card from "./Card";
 type Props = {
 	imageSrc: string;
 	artist: Artist;
+	following: boolean;
 	className?: string;
 	isLoggedIn: boolean;
 	onFollow: (artist: Artist) => void;
@@ -18,6 +19,7 @@ type Props = {
 export default function ArtistCard({
 	imageSrc,
 	artist,
+	following,
 	className,
 	isLoggedIn,
 	onFollow,
@@ -37,10 +39,10 @@ export default function ArtistCard({
 				{isLoggedIn ? (
 					<Button
 						onClick={() => onFollow(artist)}
-						variant={artist.following ? "primary" : "secondary"}
+						variant={following ? "primary" : "secondary"}
 						className="mt-3"
 					>
-						{artist.following ? "Following" : "Follow"}
+						{following ? "Following" : "Follow"}
 					</Button>
 				) : (
 					<p className="text-fg-muted text-sm mt-4">
