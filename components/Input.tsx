@@ -1,8 +1,8 @@
 'use client'
-import { useState } from "react";
+import { InputHTMLAttributes, useState } from "react";
 import { ChangeEvent, KeyboardEvent } from "react";
 
-type Props = {
+type Props = InputHTMLAttributes<HTMLInputElement> & {
 	className?: string;
 	value: string;
 	onChange: (e: ChangeEvent<HTMLInputElement>) => any;

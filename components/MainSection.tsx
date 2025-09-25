@@ -112,9 +112,10 @@ export default function MainSection() {
 				Send Email
 			</Button> */}
 
-			<h1 className="text-xl">Search an artist to follow</h1>
+			<h1 className="text-xl ">Search for an artist to follow</h1>
 
 			<Input
+			
 				onChange={handleInput}
 				value={inputValue}
 				onKeyDown={(e) => {
@@ -130,7 +131,7 @@ export default function MainSection() {
 				href="https://open.spotify.com/"
 			/>
 			<Button
-				className="mb-2 text-lg"
+				className="mb-2 text-lg "
 				onClick={handleSearchArtist}
 				disabled={isFetchingArtist || !inputHasChanged}
 			>
