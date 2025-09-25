@@ -84,7 +84,7 @@ export default function MainSection() {
 
 	async function handleSendEmail() {
 		const res = await fetch("/api/send-email", {
-			method: "POST",
+			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
 				"Authorization": `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET}`

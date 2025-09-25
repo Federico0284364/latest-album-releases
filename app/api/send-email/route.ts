@@ -4,7 +4,6 @@ import { getAllUsersFromDbAdmin } from "@/lib/firebase/database-functions/userFu
 import { getFollowedArtistsFromDbAdmin } from "@/lib/firebase/database-functions/artistFunctionsToDbAdmin";
 import { Album } from "@/models/album";
 import { Artist } from "@/models/artist";
-import { delay } from "@/lib/utils/delay";
 import { sendEmail } from "@/lib/email/send-email";
 import { isWithinLastDays } from "@/lib/utils/date";
 import { getSettingsFromDbAdmin } from "@/lib/firebase/database-functions/settingFunctionsToDbAdmin";
