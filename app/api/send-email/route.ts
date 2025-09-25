@@ -9,7 +9,7 @@ import { sendEmail } from "@/lib/email/send-email";
 import { isWithinLastDays } from "@/lib/utils/date";
 import { getSettingsFromDbAdmin } from "@/lib/firebase/database-functions/settingFunctionsToDbAdmin";
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
 	if (
 		req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
 	) {
