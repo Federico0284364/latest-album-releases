@@ -12,6 +12,7 @@ import { getArtistAlbums } from "@/lib/spotify/getArtistAlbums";
 import { Artist } from "@/models/artist";
 import AlbumCard from "./AlbumCard";
 import type { AlbumType } from "@/lib/spotify/getArtistAlbums";
+import SpotifyLogo from "./SpotifyLogo";
 
 export default function MainSection() {
 	const [albumFilter, setAlbumFilter] = useState<AlbumType>("any");
@@ -87,7 +88,7 @@ export default function MainSection() {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
-				"Authorization": `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET}`
+				Authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET}`,
 			},
 		});
 
@@ -150,17 +151,27 @@ export default function MainSection() {
 								imageSrc={selectedArtist.images[0].url}
 							/>
 							<ul className="grid grid-cols-1 sm:grid-cols-2  gap-4 justify-center">
-								{selectedArtist.albums?.map((album) => {
-									return (
-										<AlbumCard
-											key={"/" + album.id}
-											className="w-full"
-											imageSrc={album.images[0].url}
-											album={album}
-										/>
-									);
-								})}
+								{selectedArtist.albums
+									?.slice(0, 19)
+									.map((album) => {
+										return (
+											<AlbumCard
+												key={"/" + album.id}
+												className="w-full"
+												imageSrc={album.images[0].url}
+												album={album}
+											/>
+										);
+									})}
 							</ul>
+							<p className="mt-3 w-full flex justify-center">
+								<SpotifyLogo
+								variant={'white'}
+									text={"See more on"}
+									className="mt-2"
+									href={`https://open.spotify.com/artist/${selectedArtist.id}`}
+								/>
+							</p>
 						</>
 					)
 				)}

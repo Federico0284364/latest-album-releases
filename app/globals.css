@@ -69,6 +69,7 @@
 body{
   background-color: var(--bg-dark);
   padding: 16px;
+  padding-top: 0;
 }
 
 button{

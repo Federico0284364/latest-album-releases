@@ -5,6 +5,8 @@ import StoreProvider from "@/store/StoreProvider";
 import CustomLogin from "@/components/CustomLogin";
 import DrawerMenu from "@/components/DrawerMenu";
 import NavLink from "@/components/NavLink";
+import Image from "next/image";
+import SpotifyLogo from "@/components/SpotifyLogo";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -43,19 +45,28 @@ export default function RootLayout({
 				className={`${geistSans.variable} ${geistMono.variable} antialiased text-fg`}
 			>
 				<StoreProvider>
-					<header className="flex items-center justify-between">
-						<CustomLogin />
-						<nav className="flex gap-2 flex-1 max-w-100 text-fg justify-end sm:mr-4">
-							<div className="hidden sm:flex flex-1 gap-8 justify-end">
-								<NavLinks />
+					<header className="flex flex-col justify-between static pt-4 top-0 right-0 left-0 bg-dark">
+						<div className="flex items-center justify-between">
+							<div className="flex items-center gap-8">
+								<div>
+									<SpotifyLogo variant="green" text="Data provided by" href="https://open.spotify.com/"/>
+									
+								</div>
+								<CustomLogin />	
 							</div>
 
-							<DrawerMenu className="sm:hidden">
-								<NavLinks />
-							</DrawerMenu>
-						</nav>
+							<nav className="flex gap-2 flex-1 max-w-100 text-fg justify-end md:mr-4">
+								<div className="hidden md:flex flex-1 gap-8 justify-end">
+									<NavLinks />
+								</div>
+
+								<DrawerMenu className="md:hidden">
+									<NavLinks />
+								</DrawerMenu>
+							</nav>
+						</div>
+						<hr className="bg-fg mt-3 h-0.5" />
 					</header>
-					<hr className="bg-fg mt-3 h-0.5" />
 
 					{children}
 				</StoreProvider>

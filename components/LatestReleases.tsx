@@ -4,6 +4,7 @@ import { useSpotifyStore } from "@/store/store";
 import { useState, useMemo } from "react";
 import { sortAlbumsBy } from "@/lib/utils/query-albums/sorting";
 import { filterAlbumsBy } from "@/lib/utils/query-albums/filters";
+import SpotifyLogo from "./SpotifyLogo";
 
 export default function LatestReleases() {
 	const newAlbums = useSpotifyStore((state) => state.newAlbums);
@@ -39,7 +40,7 @@ export default function LatestReleases() {
 			</div>
 
 			<ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-				{filteredNewAlbums.map((album) => {
+				{filteredNewAlbums.slice(0, 20).map((album) => {
 					return (
 						<AlbumCard
 							showAlbumType={!filter}
@@ -52,6 +53,14 @@ export default function LatestReleases() {
 					);
 				})}
 			</ul>
+			<p className="mt-3 w-full flex justify-center">
+				<SpotifyLogo
+					variant={'white'}
+					text={"See more on"}
+					className="mt-2"
+					href={`https://open.spotify.com/playlist/37i9dQZEVXbnko3ujMtUqh`}
+				/>
+			</p>
 		</>
 	);
 }
