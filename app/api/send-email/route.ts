@@ -10,6 +10,12 @@ import { isWithinLastDays } from "@/lib/utils/date";
 import { getSettingsFromDbAdmin } from "@/lib/firebase/database-functions/settingFunctionsToDbAdmin";
 
 export async function POST(req: NextRequest) {
+	if (
+		req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
+	) {
+		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+	}
+
 	const today = new Date();
 	const sevenDaysAgo = new Date();
 	sevenDaysAgo.setDate(today.getDate() - 7);
@@ -40,9 +46,8 @@ export async function POST(req: NextRequest) {
 		);
 
 		for (const user of usersData) {
-			
 			const settings = await getSettingsFromDbAdmin(user.uid);
-			if (!settings?.email?.weeklyEmails){
+			if (!settings?.email?.weeklyEmails) {
 				continue;
 			}
 
