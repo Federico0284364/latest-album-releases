@@ -7,6 +7,7 @@ import DrawerMenu from "@/components/DrawerMenu";
 import NavLink from "@/components/NavLink";
 import Image from "next/image";
 import SpotifyLogo from "@/components/SpotifyLogo";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -66,6 +67,7 @@ export default function RootLayout({
 					</header>
 
 					{children}
+					<ScrollToTopButton />
 				</StoreProvider>
 			</body>
 		</html>

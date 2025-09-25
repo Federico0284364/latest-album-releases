@@ -1,8 +1,10 @@
 'use client'
 import { ButtonHTMLAttributes, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
+import { motion } from "framer-motion";
+import { ComponentProps } from "react";
 
-type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+type Props = ComponentProps<typeof motion.button> & ButtonHTMLAttributes<HTMLButtonElement> & {
 	children?: ReactNode;
 	className?: string;
 	variant?: 'primary' | 'secondary' | 'danger' | 'important';
@@ -34,8 +36,8 @@ export default function Button({
   }[size];
 
 	return (
-		<button className={twMerge(standardClass, variantClass, sizeClass, className)} {...props}>
+		<motion.button className={twMerge(standardClass, variantClass, sizeClass, className)} {...props}>
 			{children}
-		</button>
+		</motion.button>
 	);
 }

@@ -13,6 +13,7 @@ import { Artist } from "@/models/artist";
 import AlbumCard from "./AlbumCard";
 import type { AlbumType } from "@/lib/spotify/getArtistAlbums";
 import SpotifyLogo from "./SpotifyLogo";
+import ScrollToTopButton from "./ScrollToTopButton";
 
 export default function MainSection() {
 	const [albumFilter, setAlbumFilter] = useState<AlbumType>("any");
@@ -183,6 +184,7 @@ export default function MainSection() {
 					)
 				)}
 			</div>
+			<ScrollToTopButton />
 		</>
 	);
 }
