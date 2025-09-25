@@ -21,7 +21,7 @@ export async function getFollowedArtistsFromDbAdmin(
 		const artists: Artist[] = [];
 
 		// Firestore Admin SDK supporta fino a 500 documenti in una query "in"
-		const batchSize = 500;
+		const batchSize = 30;
 		for (let i = 0; i < artistIds.length; i += batchSize) {
 			const batchIds = artistIds.slice(i, i + batchSize);
 			const artistsSnapshot = await adminDb

@@ -25,7 +25,7 @@ export async function sendEmail(user: MyUser, newAlbums: Album[], oldAlbums: Alb
 							<div>
 								<strong>${album.name}</strong>
 								<p>by ${album.artists[0]?.name || "Unknown artist"}</p>
-								<p> (${new Date(album.release_date).toLocaleDateString('it-IT', {year: 'numeric'})})</p>
+								<p> ${newAlbums.length ? '' : new Date(album.release_date).toLocaleDateString('it-IT', {year: 'numeric'})}</p>
 							</div>
 						</div>
           </a>

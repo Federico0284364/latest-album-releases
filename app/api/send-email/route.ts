@@ -7,7 +7,7 @@ import { Artist } from "@/models/artist";
 import { delay } from "@/lib/utils/delay";
 import { sendEmail } from "@/lib/email/send-email";
 import { isWithinLastDays } from "@/lib/utils/date";
-import { getArtistAlbums } from "@/lib/spotify/getArtistAlbums";
+import { getSettingsFromDbAdmin } from "@/lib/firebase/database-functions/settingFunctionsToDbAdmin";
 
 export async function POST(req: NextRequest) {
 	const today = new Date();
@@ -41,6 +41,11 @@ export async function POST(req: NextRequest) {
 
 		for (const user of usersData) {
 			
+			const settings = await getSettingsFromDbAdmin(user.uid);
+			if (!settings?.email?.weeklyEmails){
+				continue;
+			}
+
 			const followedArtists = user.followedArtists;
 			let newAlbums: Album[] = [];
 			let oldAlbums: Album[] = [];
