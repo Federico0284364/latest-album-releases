@@ -20,7 +20,7 @@ export default function SpotifyLogo({ href, text, width, height, className, vari
 const imgSrc = logoMap[variant];
 
 	return (
-		<a className={twMerge("block", className)} href={href} target="_blank">
+		<a className={twMerge(" flex flex-col items-center", className)} href={href} target="_blank">
       <span>{text}</span>
 			<Image
 				src={imgSrc}

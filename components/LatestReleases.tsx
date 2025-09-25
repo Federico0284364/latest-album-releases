@@ -39,28 +39,32 @@ export default function LatestReleases() {
 				</select>
 			</div>
 
-			<ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-				{filteredNewAlbums.slice(0, 20).map((album) => {
-					return (
-						<AlbumCard
-							showAlbumType={!filter}
-							album={album}
-							imageSrc={album.images?.[0]?.url}
-							className="w-full"
-							showArtistName={true}
-							key={"new-album" + album.id}
+			{filteredNewAlbums.length ? (
+				<>
+					<ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+						{filteredNewAlbums.slice(0, 20).map((album) => {
+							return (
+								<AlbumCard
+									showAlbumType={!filter}
+									album={album}
+									imageSrc={album.images?.[0]?.url}
+									className="w-full"
+									showArtistName={true}
+									key={"new-album" + album.id}
+								/>
+							);
+						})}
+					</ul>
+					<p className="mt-3 w-full flex justify-center">
+						<SpotifyLogo
+							variant={"white"}
+							text={"See more on"}
+							className="mt-2"
+							href={`https://open.spotify.com/playlist/37i9dQZEVXbnko3ujMtUqh`}
 						/>
-					);
-				})}
-			</ul>
-			<p className="mt-3 w-full flex justify-center">
-				<SpotifyLogo
-					variant={'white'}
-					text={"See more on"}
-					className="mt-2"
-					href={`https://open.spotify.com/playlist/37i9dQZEVXbnko3ujMtUqh`}
-				/>
-			</p>
+					</p>
+				</>
+			): null}
 		</>
 	);
 }

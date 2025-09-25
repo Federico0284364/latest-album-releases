@@ -108,12 +108,12 @@ export default function MainSection() {
 
 	return (
 		<>
-			<Button className="text-lg" onClick={handleSendEmail}>
+			{/* <Button className="text-lg" onClick={handleSendEmail}>
 				Send Email
-			</Button>
-			<Button className="text-lg" onClick={handleUpdateArtists}>
-				Update Artists
-			</Button>
+			</Button> */}
+
+			<h1 className="text-xl">Search an artist to follow</h1>
+
 			<Input
 				onChange={handleInput}
 				value={inputValue}
@@ -124,6 +124,11 @@ export default function MainSection() {
 					}
 				}}
 			/>
+			<SpotifyLogo
+				variant="green"
+				text="Data provided by"
+				href="https://open.spotify.com/"
+			/>
 			<Button
 				className="mb-2 text-lg"
 				onClick={handleSearchArtist}
@@ -131,6 +136,7 @@ export default function MainSection() {
 			>
 				Get Artist
 			</Button>
+
 			<div className="w-[90%]">
 				{isFetchingArtist ? (
 					<div className="flex flex-col items-center">
@@ -166,7 +172,7 @@ export default function MainSection() {
 							</ul>
 							<p className="mt-3 w-full flex justify-center">
 								<SpotifyLogo
-								variant={'white'}
+									variant={"white"}
 									text={"See more on"}
 									className="mt-2"
 									href={`https://open.spotify.com/artist/${selectedArtist.id}`}

@@ -48,10 +48,7 @@ export default function RootLayout({
 					<header className="flex flex-col justify-between static pt-4 top-0 right-0 left-0 bg-dark">
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-8">
-								<div>
-									<SpotifyLogo variant="green" text="Data provided by" href="https://open.spotify.com/"/>
-									
-								</div>
+								
 								<CustomLogin />	
 							</div>
 

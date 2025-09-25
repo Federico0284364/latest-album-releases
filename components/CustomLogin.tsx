@@ -8,10 +8,12 @@ import {
 	signOut,
 } from "@/lib/firebase/firestore";
 import { onAuthStateChanged, User } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 export default function CustomLogin() {
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
+	const router = useRouter();
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -36,6 +38,7 @@ export default function CustomLogin() {
 	const handleLogout = async () => {
 		try {
 			await signOut(auth);
+			router.push("/");
 		} catch (error) {
 			console.error("Errore logout:", error);
 		}
