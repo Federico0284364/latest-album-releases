@@ -27,14 +27,14 @@ export default function ScrollToTopButton({ className, ...props }: Props) {
 				exit={{ y: 100 }}
 				transition={{ duration: 0.2 }}
 				className={twMerge(
-					"text-fg bg-light border-fg-muted rounded-full fixed bottom-4 right-4 z-100 w-12 h-12",
+					"text-fg bg-light hover:opacity-20 border-border rounded-full fixed bottom-4 right-4 z-100 w-12 h-12",
 					className
 				)}
 				onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
 			>
 				<svg
 					viewBox="0 0 24 24"
-					fill=""
+					fill="currentColor"
 					xmlns="http://www.w3.org/2000/svg"
 				>
 					<path

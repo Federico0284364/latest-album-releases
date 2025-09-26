@@ -25,7 +25,7 @@ export default function ArtistCard({
 	onFollow,
 }: Props) {
 	return (
-		<Card className={className}>
+		<Card className={twMerge('border-1 border-border-muted', className)}>
 			<Image
 				className="w-40 aspect-square rounded-full object-cover bg-dark"
 				src={imageSrc}

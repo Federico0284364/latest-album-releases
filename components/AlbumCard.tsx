@@ -22,7 +22,7 @@ export default function AlbumCard({
 	showArtistName = false,
 }: Props) {
 	return (
-		<Card className={twMerge("w-60", className)}>
+		<Card className={twMerge("w-60 border-border-muted border-1", className)}>
 			<a href={album.external_urls.spotify} target="__blank">
 				<div className="gap-3 p-5">
 					<Image

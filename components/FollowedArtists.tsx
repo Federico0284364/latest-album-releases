@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 import { Artist } from "@/models/artist";
 import { useSpotifyStore } from "@/store/store";
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Button from "./Button";
 import Image from "next/image";
 import AlbumCard from "./AlbumCard";
@@ -45,7 +45,7 @@ export default function FollowedArtists({ className }: Props) {
 	const followedArtistsList = useSpotifyStore(
 		(state) => state.followedArtistsList
 	);
-	
+
 	const handleFollow = useSpotifyStore((state) => state.handleFollow);
 
 	const [numberOfAlbums, setNumberOfAlbums] = useState<number>();
@@ -55,7 +55,11 @@ export default function FollowedArtists({ className }: Props) {
 	);
 
 	async function handleOpenArtist(artist: Artist) {
-		setOpenArtist(artist);
+		if (openArtist?.id === artist.id) {
+			setOpenArtist(undefined);
+		} else {
+			setOpenArtist(artist);
+		}
 	}
 
 	async function handleUnfollow(artistId: string) {
@@ -64,80 +68,98 @@ export default function FollowedArtists({ className }: Props) {
 		const previousOpenArtist = { ...openArtist } as Artist;
 		setOpenArtist(undefined);
 		try {
-			await handleFollow({...artist, following: true});
+			await handleFollow({ ...artist, following: true });
 		} catch (error) {
 			setOpenArtist(previousOpenArtist);
 		}
 	}
 
 	return (
-		<aside className={twMerge("", className)}>
-			
-			<motion.ul layout className="flex flex-col gap-1">
+		<aside className={twMerge("flex justify-center", className)}>
+			<motion.ul className="flex flex-col gap-1 w-[90vw] max-w-140">
 				{followedArtistsList?.map((artist) => {
 					return (
 						<li
 							onClick={() => handleOpenArtist(artist)}
 							key={artist.id}
-							className="text-fg bg-medium rounded-2xl p-2"
+							className="text-fg bg-medium rounded-2xl border-1 border-border-muted py-2 px-4"
 						>
 							<h1 className="text-2xl">{artist.name}</h1>
-							{openArtist?.id === artist.id && (
-								<div className="flex flex-col mt-4 items-center">
-									<fieldset
-										id="last-releases"
-										className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 border border-neutral-700 p-6 gap-8"
+							<AnimatePresence>
+								{openArtist?.id === artist.id && (
+									<motion.div
+										key={artist.name + "albums"}
+										initial={{ scaleY: 0.2 }}
+										animate={{
+											scaleY: 1,
+											transformOrigin: "top",
+											transition: {
+												type: "tween",
+												duration: 0.15,
+											},
+										}}
+										exit={{
+											scaleY: 0,
+											opacity: 0,
+											transformOrigin: "top",
+											transition: {
+												type: "tween",
+												duration: 0.1,
+											},
+										}}
+										className="flex flex-col mt-4 items-center"
 									>
-										<legend className="px-2">
-											Last releases
-										</legend>
-										{albums?.map((album) => {
-											return (
-												<li key={'a' + album.id}>
-													<a
-														className="flex-col flex"
-														href={
-															album.external_urls
-																.spotify
-														}
-													>
-														<Image
-															width={100}
-															height={100}
-															className="w-full mb-2 rounded-sm"
-															src={
-																album.images[0]
-																	.url
+										<ul className="grid sm:grid-cols-4 grid-cols-3 border-border p-6 gap-8">
+											{albums?.map((album) => {
+												return (
+													<li key={"a" + album.id}>
+														<a
+															className="flex-col flex"
+															href={
+																album
+																	.external_urls
+																	.spotify
 															}
-															alt={`${album.id} album cover`}
-														/>
-														<h3 className="text-md sm:text-lg break-words">
-															{album.name}
-														</h3>
-														<p className="text-sm text-fg-muted">
-															{makeDatePretty(
-																new Date(
-																	album.release_date
-																)
-															)}
-														</p>
-													</a>
-												</li>
-											);
-										})}
-									</fieldset>
+														>
+															<Image
+																width={100}
+																height={100}
+																className="w-full mb-2 rounded-sm"
+																src={
+																	album
+																		.images[0]
+																		.url
+																}
+																alt={`${album.id} album cover`}
+															/>
+															<h3 className="text-md sm:text-lg break-words overflow-ellipsis line-clamp-4">
+																{album.name}
+															</h3>
+															<p className="text-sm text-fg-muted">
+																{makeDatePretty(
+																	new Date(
+																		album.release_date
+																	)
+																)}
+															</p>
+														</a>
+													</li>
+												);
+											})}
+										</ul>
 
-									<Button
-										className="h-9 mt-4 w-[50%] max-w-100 mb-2"
-										variant="danger"
-										onClick={() =>
-											handleUnfollow(artist.id)
-										}
-									>
-										Unfolllow
-									</Button>
-								</div>
-							)}
+										<Button
+											className="h-9 mt-4 w-[50%] max-w-100 mb-2"
+											variant="danger"
+											onClick={() =>
+												handleUnfollow(artist.id)
+											}
+										>
+											Unfolllow
+										</Button>
+									</motion.div>
+								)}
+							</AnimatePresence>
 						</li>
 					);
 				})}
