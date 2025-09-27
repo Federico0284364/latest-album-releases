@@ -7,10 +7,10 @@ import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "./Button";
 import Image from "next/image";
-import AlbumCard from "./AlbumCard";
 import { sortAlbumsBy } from "@/lib/utils/query-albums/sorting";
 import { makeDatePretty } from "@/lib/utils/date";
-import { toggleFollowArtistToDb } from "@/lib/firebase/database-functions/followFunctionsToDb";
+import Notification from "./Notification";
+import { sortArtistsBy } from "@/lib/utils/query-artists/sorting";
 
 type Props = {
 	className?: string;
@@ -20,13 +20,7 @@ export default function FollowedArtists({ className }: Props) {
 	useEffect(() => {
 		let size;
 		function handleResize() {
-			if (window.innerWidth > 1280) {
-				size = 7;
-			} else if (window.innerWidth > 1024) {
-				size = 6;
-			} else if (window.innerWidth > 768) {
-				size = 5;
-			} else if (window.innerWidth > 640) {
+			if (window.innerWidth > 640) {
 				size = 4;
 			} else {
 				size = 3;
@@ -42,14 +36,16 @@ export default function FollowedArtists({ className }: Props) {
 	}, []);
 
 	const user = useSpotifyStore((state) => state.user);
-	const followedArtistsList = useSpotifyStore(
+	const followedArtistsList = sortArtistsBy.name(useSpotifyStore(
 		(state) => state.followedArtistsList
-	);
+	));
 
 	const handleFollow = useSpotifyStore((state) => state.handleFollow);
 
 	const [numberOfAlbums, setNumberOfAlbums] = useState<number>();
 	const [openArtist, setOpenArtist] = useState<Artist>();
+	const [unfollowedArtist, setUnfollowedArtist] = useState<Artist>();
+
 	const albums = sortAlbumsBy.release_date(
 		openArtist?.albums?.slice(0, numberOfAlbums)
 	);
@@ -69,13 +65,25 @@ export default function FollowedArtists({ className }: Props) {
 		setOpenArtist(undefined);
 		try {
 			await handleFollow({ ...artist, following: true });
+			setUnfollowedArtist(previousOpenArtist);
 		} catch (error) {
 			setOpenArtist(previousOpenArtist);
 		}
 	}
 
+	function handleHideUnfollowNotification() {
+		setUnfollowedArtist(undefined);
+	}
+
+	function handleShowUnfollowNotification() {}
+
 	return (
 		<aside className={twMerge("flex justify-center", className)}>
+			<Notification
+				message={unfollowedArtist ? `You have unfollowed ${unfollowedArtist?.name}` : ""}
+				onClose={handleHideUnfollowNotification}
+			/>
+
 			<motion.ul className="flex flex-col gap-1 w-[90vw] max-w-140">
 				{followedArtistsList?.map((artist) => {
 					return (
@@ -104,7 +112,7 @@ export default function FollowedArtists({ className }: Props) {
 											transformOrigin: "top",
 											transition: {
 												type: "tween",
-												duration: 0.1,
+												duration: 0.15,
 											},
 										}}
 										className="flex flex-col mt-4 items-center"

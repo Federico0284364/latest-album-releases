@@ -53,6 +53,8 @@ export async function getFollowedArtistsFromDb(
 			snap.docs.map((doc) => doc.data() as Artist)
 		);
 
+		artists.sort((a, b) => a.name.localeCompare(b.name));
+
 		return artists;
 	} catch (error) {
 		console.error("Errore nel recuperare gli artisti seguiti:", error);
