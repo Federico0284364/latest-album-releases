@@ -2,7 +2,7 @@ import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 
 type Props = {
-	href: string;
+	href?: string;
 	text?: string;
 	width?: number;
 	height?: number;

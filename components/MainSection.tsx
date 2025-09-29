@@ -129,7 +129,7 @@ export default function MainSection() {
 			<SpotifyLogo
 				variant="green"
 				text="Data provided by"
-				href="https://open.spotify.com/"
+				
 			/>
 			<Button
 				className="mb-2 text-lg "

@@ -60,7 +60,7 @@ export default function LatestReleases() {
 							variant={"white"}
 							text={"See more on"}
 							className="mt-2"
-							href={`https://open.spotify.com/playlist/37i9dQZEVXbnko3ujMtUqh`}
+							href={`https://open.spotify.com`}
 						/>
 					</p>
 				</>
