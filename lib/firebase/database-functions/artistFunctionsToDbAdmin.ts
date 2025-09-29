@@ -30,7 +30,7 @@ export async function getFollowedArtistsFromDbAdmin(
 				.get();
 
 			artists.push(
-				...artistsSnapshot.docs.map((doc) => {return {...doc.data(), following: true} as Artist})
+				...artistsSnapshot.docs.map((doc) => {return {...doc.data()} as Artist})
 			);
 		}
 

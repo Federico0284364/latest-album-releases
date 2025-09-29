@@ -2,22 +2,30 @@ import { db } from "@/lib/firebase/firestore";
 import { doc, runTransaction } from "firebase/firestore";
 import type { Artist } from "@/models/artist";
 import { useSpotifyStore } from "@/store/store";
+import { Album } from "@/models/album";
 
-export async function toggleFollowArtistToDb(userId: string, artist: Artist) {
+export async function toggleFollowArtistToDb(
+	userId: string,
+	artist: Artist,
+	isFollowing: boolean
+) {
 	const {
 		user,
 		followedArtistsList,
 		setFollowedArtistsList,
 		selectedArtist,
 		setSelectedArtist,
+		newAlbums,
+		setNewAlbums,
 	} = useSpotifyStore.getState();
 
 	if (!user?.uid) return;
 
 	const previousSelectedArtist = { ...selectedArtist } as Artist;
 	const previousFollowedList: Artist[] = [...followedArtistsList];
+	const previousNewAlbums: Album[] = [...newAlbums];
 
-	updateLocalState(artist);
+	updateLocalState(artist, isFollowing);
 
 	try {
 		if (!userId || !artist?.id) {
@@ -45,22 +53,22 @@ export async function toggleFollowArtistToDb(userId: string, artist: Artist) {
 	} catch (error) {
 		setFollowedArtistsList(previousFollowedList);
 		setSelectedArtist(previousSelectedArtist);
+		setNewAlbums(previousNewAlbums);
 		console.error("Errore nel toggle follow:", error);
 		throw error;
 	}
 }
 
-function updateLocalState(artist: Artist) {
+function updateLocalState(artist: Artist, isFollowing: boolean) {
+	const { followedArtistsList, setFollowedArtistsList } =
+		useSpotifyStore.getState();
 
-	useSpotifyStore.setState((state) => {
-		const updatedArtist = {...artist, following: !artist.following};
-		const updatedList = updatedArtist.following
-			? [...state.followedArtistsList, {...updatedArtist}]
-			: state.followedArtistsList.filter((a) => a.id !== artist.id);
+	const updatedList = isFollowing
+		? followedArtistsList.filter((a) => a.id !== artist.id)
+		: [
+				...followedArtistsList.filter((art) => art.id !== artist.id),
+				artist,
+		  ];
 
-		return {
-			selectedArtist: updatedArtist,
-			followedArtistsList: updatedList,
-		};
-	});
+	setFollowedArtistsList(updatedList);
 }

@@ -28,7 +28,7 @@ type SpotifyStore = {
 	setFollowedArtistsList(artists: Artist[]): void;
 	setNewAlbums(albums: Album[]): void;
 
-	handleFollow(artist: Artist): Promise<void>;
+	handleFollow(artist: Artist, isFollowing: boolean): Promise<void>;
 
 	resetStore: () => void;
 };
@@ -67,7 +67,28 @@ export const useSpotifyStore = create<SpotifyStore>((set, get) => {
 	}
 
 	function setFollowedArtistsList(artists: Artist[]): void {
-		set({ followedArtistsList: artists });
+		const albums: Album[] = [];
+		artists.forEach((artist) => {
+			artist.albums.forEach((album) => {
+				albums.push(album);
+			});
+		});
+		const uniqueAlbums = albums.filter(
+			(album, index, self) =>
+				index === self.findIndex((a) => a.id === album.id)
+		);
+
+		uniqueAlbums.sort((a, b) => {
+			return (
+				new Date(b.release_date).getTime() -
+				new Date(a.release_date).getTime()
+			);
+		});
+
+		set({
+			followedArtistsList: artists,
+			newAlbums: uniqueAlbums.slice(0, 60),
+		});
 	}
 
 	function setNewAlbums(albums: Album[]): void {
@@ -77,26 +98,27 @@ export const useSpotifyStore = create<SpotifyStore>((set, get) => {
 				new Date(a.release_date).getTime()
 			);
 		});
-		set({ newAlbums: albums.slice(0, 100) });
+		set({ newAlbums: albums.slice(0, 60) });
 	}
 
-	async function handleFollow(artist: Artist) {
+	async function handleFollow(artist: Artist, isFollowing: boolean) {
 		const user = get().user;
 		if (!artist || !user) return;
 		try {
-			await toggleFollowArtistToDb(user?.uid, artist);
+			await toggleFollowArtistToDb(user?.uid, artist, isFollowing);
 		} catch (error) {
 			throw error;
 		}
 	}
-	function resetStore(){
-			set({
-				user: null,
-				selectedArtist: undefined,
-				followedArtistsList: [],
-				newAlbums: [],
-				settings: {} as Settings,
-			})}
+	function resetStore() {
+		set({
+			user: null,
+			selectedArtist: undefined,
+			followedArtistsList: [],
+			newAlbums: [],
+			settings: {} as Settings,
+		});
+	}
 
 	return {
 		user: null,
@@ -120,6 +142,6 @@ export const useSpotifyStore = create<SpotifyStore>((set, get) => {
 
 		handleFollow,
 
-		resetStore
+		resetStore,
 	};
 });

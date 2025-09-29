@@ -9,7 +9,10 @@ import { auth } from "@/lib/firebase/firestore";
 import { getToken } from "@/lib/spotify/getToken";
 import { getFollowedArtistsFromDb } from "@/lib/firebase/database-functions/artistFunctionsToDb";
 import { saveUserDataToDb } from "@/lib/firebase/database-functions/userFunctionsToDb";
-import { getSettingsFromDb, saveSettingsToDb } from "@/lib/firebase/database-functions/settingFunctionsToDb";
+import {
+	getSettingsFromDb,
+	saveSettingsToDb,
+} from "@/lib/firebase/database-functions/settingFunctionsToDb";
 import { Settings } from "@/models/settings";
 
 export default function StoreProvider({ children }: { children: ReactNode }) {
@@ -23,9 +26,8 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 		(state) => state.setFollowedArtistsList
 	);
 	const setNewAlbums = useSpotifyStore((state) => state.setNewAlbums);
-	const setSettings = useSpotifyStore(state => state.setSettings);
-	const resetStore = useSpotifyStore(state => state.resetStore)
-
+	const setSettings = useSpotifyStore((state) => state.setSettings);
+	const resetStore = useSpotifyStore((state) => state.resetStore);
 
 	useEffect(() => {
 		if (!user || !user.uid) {
@@ -35,7 +37,6 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 			setFollowedArtistsList([]);
 			setSelectedArtist({
 				...selectedArtist,
-				following: false,
 			} as Artist);
 
 			return;
@@ -45,7 +46,6 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 		async function fetchFollowedArtistsList(userId: string) {
 			await getToken();
 			const artists: Artist[] = await getFollowedArtistsFromDb(userId);
-			artists.map((artist) => ({ ...artist, following: true }));
 			setFollowedArtistsList(artists);
 
 			const albums: Album[] = [];
@@ -61,18 +61,18 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 			setNewAlbums(uniqueAlbums);
 		}
 
-		async function fetchSettings(userId: string){
+		async function fetchSettings(userId: string) {
 			const settings: Settings = await getSettingsFromDb(userId);
 			setSettings(settings);
 		}
 
 		fetchFollowedArtistsList(user.uid);
-		fetchSettings(user.uid)
+		fetchSettings(user.uid);
 	}, [user]);
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-			if (!currentUser){
+			if (!currentUser) {
 				resetStore();
 			}
 			setUser(currentUser);

@@ -48,6 +48,7 @@ export default function MainSection() {
 				const artistData: Artist | undefined = await getArtist({
 					name: inputValue,
 				});
+
 				if (!artistData) {
 					setSelectedArtist(undefined);
 					return;
@@ -73,7 +74,7 @@ export default function MainSection() {
 
 	async function handleToggle(artist: Artist) {
 		try {
-			await handleFollow(artist);
+			await handleFollow(artist, following);
 		} catch (error) {
 			setSelectedArtist(artist);
 		}
@@ -116,7 +117,6 @@ export default function MainSection() {
 			<h1 className="text-xl ">Search for an artist to follow</h1>
 
 			<Input
-			
 				onChange={handleInput}
 				value={inputValue}
 				onKeyDown={(e) => {

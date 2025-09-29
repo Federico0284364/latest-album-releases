@@ -11,7 +11,6 @@ export interface Artist {
     popularity:    number;
     type:          string;
     uri:           string;
-    following:     boolean;
     albums: Album[];
 }
 

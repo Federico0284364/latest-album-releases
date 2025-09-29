@@ -64,7 +64,7 @@ export default function FollowedArtists({ className }: Props) {
 		const previousOpenArtist = { ...openArtist } as Artist;
 		setOpenArtist(undefined);
 		try {
-			await handleFollow({ ...artist, following: true });
+			await handleFollow(artist, true);
 			setUnfollowedArtist(previousOpenArtist);
 		} catch (error) {
 			setOpenArtist(previousOpenArtist);
