@@ -1,10 +1,12 @@
 "use client";
 import AlbumCard from "./AlbumCard";
 import { useSpotifyStore } from "@/store/store";
-import { useState, useMemo } from "react";
+import { useState, useMemo, Fragment } from "react";
 import { sortAlbumsBy } from "@/lib/utils/query-albums/sorting";
 import { filterAlbumsBy } from "@/lib/utils/query-albums/filters";
 import SpotifyLogo from "./SpotifyLogo";
+import { Album } from "@/models/album";
+import { isWithinLastDays } from "@/lib/utils/date";
 
 export default function LatestReleases() {
 	const newAlbums = useSpotifyStore((state) => state.newAlbums);
@@ -32,29 +34,48 @@ export default function LatestReleases() {
 						)
 					}
 				>
-					<option value="">none</option>
-					<option value="album">albums</option>
-					<option value="single">singles</option>
-					<option value="compilation">compilations</option>
+					<option value="">None</option>
+					<option value="album">Albums</option>
+					<option value="single">Singles / EPs</option>
+					<option value="compilation">Compilations</option>
 				</select>
 			</div>
 
 			{filteredNewAlbums.length ? (
-				<>
-					<ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-						{filteredNewAlbums.slice(0, 20).map((album) => {
+				<div className="w-full flex flex-col">
+					<ul className="flex flex-wrap gap-2 justify-start mx-auto">
+						{filteredNewAlbums.slice(0, 20).map((album, index) => {
+							let showDate;
+							const today = new Date();
+							const albumDate = new Date(album?.release_date);
+							const lastAlbumDate = new Date(filteredNewAlbums[index - 1]?.release_date)
+
+							if (index === 0 && isWithinLastDays(albumDate, 7)){
+								showDate = 'This week'
+							} else if (
+								albumDate.getMonth() == today.getMonth() && !isWithinLastDays(albumDate, 7) && isWithinLastDays(lastAlbumDate, 7)
+							) {
+								showDate = 'This month'
+							} else if (albumDate.getMonth() !== lastAlbumDate.getMonth()){
+								showDate = albumDate.toLocaleDateString('en-US', {month: 'long'})
+							}
+
 							return (
-								<AlbumCard
-									showAlbumType={!filter}
-									album={album}
-									imageSrc={album.images?.[0]?.url}
-									className="w-full"
-									showArtistName={true}
-									key={"new-album" + album.id}
-								/>
+								<Fragment key={"new album" + album.id}>
+									{showDate && <p className="w-full text-xl bg-highlight rounded-sm px-2 py-1 mt-8 mb-2">{showDate}</p>}
+									<AlbumCard
+										showAlbumType={!filter}
+										album={album}
+										imageSrc={album.images?.[0]?.url}
+										className="w-[calc(50%-1rem)] sm:w-[calc(33%-1rem)] md:w-[calc(25%-1rem)] lg:w-[calc(20%-1rem)] xl:w-[calc(17%-1rem)]"
+										showArtistName={true}
+										key={"new-album" + album.id}
+									/>
+								</Fragment>
 							);
 						})}
 					</ul>
+
 					<p className="mt-3 w-full flex justify-center">
 						<SpotifyLogo
 							variant={"white"}
@@ -63,8 +84,8 @@ export default function LatestReleases() {
 							href={`https://open.spotify.com`}
 						/>
 					</p>
-				</>
-			): null}
+				</div>
+			) : null}
 		</>
 	);
 }
