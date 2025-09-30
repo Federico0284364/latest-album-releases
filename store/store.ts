@@ -125,6 +125,7 @@ export const useSpotifyStore = create<SpotifyStore>((set, get) => {
 		settings: {
 			email: {
 				weeklyEmails: true,
+				singles: true
 			},
 		},
 		inputValue: "",
