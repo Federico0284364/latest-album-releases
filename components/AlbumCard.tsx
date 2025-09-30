@@ -15,14 +15,20 @@ type Props = {
 
 export default function AlbumCard({
 	album,
-
 	imageSrc,
 	className,
 	showAlbumType = false,
 	showArtistName = false,
 }: Props) {
+	let albumType: string = album?.album_type;
+	if (albumType === 'single' && album.total_tracks > 3){
+		albumType = 'EP'
+	}
+
 	return (
-		<Card className={twMerge("w-60 border-border-muted border-1", className)}>
+		<Card
+			className={twMerge("w-60 border-border-muted border-1", className)}
+		>
 			<a href={album.external_urls.spotify} target="__blank">
 				<div className="gap-3 p-5">
 					<Image
@@ -33,16 +39,18 @@ export default function AlbumCard({
 						height={100}
 					/>
 				</div>
-				{showAlbumType && <p
-					className={twMerge(
-						"text-fg-muted text-sm italic w-fit px-1.5 py-0.5 rounded-full",
-						album.album_type === "album"
-							? "bg-blue-500/40"
-							: "bg-fg/50 text-black"
-					)}
-				>
-					{capitalize(album.album_type)}
-				</p>}
+				{showAlbumType && (
+					<p
+						className={twMerge(
+							"text-fg-muted text-sm italic w-fit px-1.5 py-0.5 rounded-full",
+							album.album_type === "album"
+								? "bg-blue-500/40"
+								: "bg-fg/50 text-black"
+						)}
+					>
+						{capitalize(albumType)}
+					</p>
+				)}
 				<h2 className="text-xl mt-4 text-fg">{album.name}</h2>
 				<ul className={showArtistName ? "mb-2" : "mb-2"}>
 					{showArtistName &&
@@ -56,12 +64,12 @@ export default function AlbumCard({
 						))}
 				</ul>
 
-				<p className="text-fg-muted flex justify-between text-sm">
-					<span className="">
+				<p className="text-fg-muted flex flex-wrap justify-between text-sm">
+					<span className="text-sm sm:text-md mr-3">
 						{album.total_tracks +
 							(album.total_tracks > 1 ? " tracks" : " track")}
 					</span>
-					<span className="">
+					<span className="text-sm sm:text-md">
 						{makeDatePretty(new Date(album.release_date))}
 					</span>
 				</p>

@@ -43,7 +43,7 @@ export default function LatestReleases() {
 
 			{filteredNewAlbums.length ? (
 				<div className="w-full flex flex-col">
-					<ul className="flex flex-wrap gap-2 justify-start mx-auto">
+					<ul className="flex flex-wrap gap-2 sm:gap-2 justify-between sm:justify-start mx-auto">
 						{filteredNewAlbums.slice(0, 20).map((album, index) => {
 							let showDate;
 							const today = new Date();
@@ -53,21 +53,19 @@ export default function LatestReleases() {
 							if (index === 0 && isWithinLastDays(albumDate, 7)){
 								showDate = 'Last 7 days'
 							} else if (
-								albumDate.getMonth() == today.getMonth() && !isWithinLastDays(albumDate, 7) && (isWithinLastDays(lastAlbumDate, 7) || lastAlbumDate === undefined)
+								(!isWithinLastDays(albumDate, 7) && (isWithinLastDays(lastAlbumDate, 7))) || (albumDate.getMonth() !== lastAlbumDate.getMonth()) 
 							) {
-								showDate = 'This month'
-							} else if (albumDate.getMonth() !== lastAlbumDate.getMonth()){
-								showDate = albumDate.toLocaleDateString('en-US', {month: 'long'})
+								showDate =  albumDate.toLocaleDateString('en-US', {month: 'long'})
 							}
 
 							return (
 								<Fragment key={"new album" + album.id}>
 									{showDate && <p className="w-full border-1 border-border text-xl bg-highlight rounded-sm px-2 py-1 mt-8 mb-2">{showDate}</p>}
 									<AlbumCard
-										showAlbumType={!filter}
+										showAlbumType={!filter || filter === 'single'}
 										album={album}
 										imageSrc={album.images?.[0]?.url}
-										className="w-[calc(50%-1rem)] sm:w-[calc(33%-1rem)] md:w-[calc(25%-1rem)] lg:w-[calc(20%-1rem)] xl:w-[calc(17%-1rem)]"
+										className="w-[calc(50%-0.4rem)] sm:w-[calc(33%-0.5rem)] md:w-[calc(25%-0.5rem)] lg:w-[calc(20%-0.5rem)] xl:w-[calc(17%-0.8rem)]"
 										showArtistName={true}
 										key={"new-album" + album.id}
 									/>
