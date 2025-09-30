@@ -51,9 +51,9 @@ export default function LatestReleases() {
 							const lastAlbumDate = new Date(filteredNewAlbums[index - 1]?.release_date)
 
 							if (index === 0 && isWithinLastDays(albumDate, 7)){
-								showDate = 'This week'
+								showDate = 'Last 7 days'
 							} else if (
-								albumDate.getMonth() == today.getMonth() && !isWithinLastDays(albumDate, 7) && isWithinLastDays(lastAlbumDate, 7)
+								albumDate.getMonth() == today.getMonth() && !isWithinLastDays(albumDate, 7) && (isWithinLastDays(lastAlbumDate, 7) || lastAlbumDate === undefined)
 							) {
 								showDate = 'This month'
 							} else if (albumDate.getMonth() !== lastAlbumDate.getMonth()){
@@ -62,7 +62,7 @@ export default function LatestReleases() {
 
 							return (
 								<Fragment key={"new album" + album.id}>
-									{showDate && <p className="w-full text-xl bg-highlight rounded-sm px-2 py-1 mt-8 mb-2">{showDate}</p>}
+									{showDate && <p className="w-full border-1 border-border text-xl bg-highlight rounded-sm px-2 py-1 mt-8 mb-2">{showDate}</p>}
 									<AlbumCard
 										showAlbumType={!filter}
 										album={album}
