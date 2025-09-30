@@ -85,29 +85,6 @@ export default function MainSection() {
 		setInputHasChanged(true);
 	}
 
-	async function handleSendEmail() {
-		const res = await fetch("/api/send-email", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET}`,
-			},
-		});
-
-		console.log("email:", res);
-	}
-
-	async function handleUpdateArtists() {
-		const res = await fetch("/api/update-artists", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
-
-		console.log("artists", res);
-	}
-
 	return (
 		<>
 			{/* <Button className="text-lg" onClick={handleSendEmail}>
