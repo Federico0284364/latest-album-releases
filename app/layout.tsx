@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "@/store/StoreProvider";
-import CustomLogin from "@/components/CustomLogin";
+import CustomLoginButton from "@/components/CustomLoginButton";
 import DrawerMenu from "@/components/DrawerMenu";
 import NavLink from "@/components/NavLink";
 import Image from "next/image";
 import SpotifyLogo from "@/components/SpotifyLogo";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
+import UserName from "@/components/UserGreeting";
+import LoginSection from "@/components/LoginSection";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -49,12 +51,11 @@ export default function RootLayout({
 					<header className="flex flex-col justify-between static pt-4 top-0 right-0 left-0 bg-dark">
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-8">
-								
-								<CustomLogin />	
+								<LoginSection />
 							</div>
 
-							<nav className="flex gap-2 flex-1 max-w-100 text-fg justify-end md:mr-4">
-								<div className="hidden md:flex flex-1 gap-8 justify-end">
+							<nav className="flex gap-2 flex-1 max-w-140 text-fg justify-end items-center md:mr-4">
+								<div className="hidden md:flex flex-1 gap-8 justify-end items-center">
 									<NavLinks />
 								</div>
 

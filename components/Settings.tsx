@@ -4,6 +4,7 @@ import { useSpotifyStore } from "@/store/store";
 import { ReactNode } from "react";
 import type { Settings } from "@/models/settings";
 import { saveSettingsToDb } from "@/lib/firebase/database-functions/settingFunctionsToDb";
+import LogoutButton from "./CustomLogoutButton";
 
 type SectionProps = {
 	title: string;
@@ -54,6 +55,7 @@ export default function Settings() {
 					onChange={handleSettingChange}
 				/>
 			</Section>
+			{user && <LogoutButton />}
 		</>
 	);
 }
