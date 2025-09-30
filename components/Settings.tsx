@@ -49,11 +49,23 @@ export default function Settings() {
 					settingValue={settings?.email?.weeklyEmails ?? false}
 					name={"Weekly emails"}
 					description={
-						"Enable to receive weekly emails about new releases from your favorite artists"
+						"Enable to receive weekly e-mails about new releases from your favorite artists."
 					}
 					type="checkbox"
 					onChange={handleSettingChange}
 				/>
+
+				{settings.email.weeklyEmails && <Setting
+					settingSection={"email"}
+					settingKey={"singles"}
+					settingValue={settings?.email?.singles ?? false}
+					name={"Singles/EP"}
+					description={
+						"Enable to receive e-mails about new singles, EPs and albums. If you disable this option, you will only be notified about new albums."
+					}
+					type="checkbox"
+					onChange={handleSettingChange}
+				/>}
 			</Section>
 			{user && <LogoutButton />}
 		</>
@@ -65,6 +77,7 @@ function Section({ title, children }: SectionProps) {
 		<section>
 			<h2 className="text-2xl mb-2">{title}</h2>
 			{children}
+			<hr className="border-t border-dashed border-border-muted my-4"></hr>
 		</section>
 	);
 }
@@ -87,7 +100,7 @@ export function Setting<S extends keyof Settings, K extends keyof Settings[S]>({
 		return (
 			<div className="flex flex-col mb-4">
 				<label className="inline-flex items-center space-x-2">
-					<span className="text-fg/70 mr-4">{name}</span>
+					<span className="text-fg/80 mr-4">{name}</span>
 					<input
 						type="checkbox"
 						checked={settingValue}
