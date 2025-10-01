@@ -64,8 +64,17 @@ export async function GET(req: NextRequest) {
 
 				newAlbums.push(
 					...albums.filter((album) => {
+						if (!album.release_date) return false;
+
 						const releaseDate = new Date(album.release_date);
-						return isWithinLastDays(releaseDate, 7);
+						if (isNaN(releaseDate.getTime())) return false;
+
+						const isRecent = isWithinLastDays(releaseDate, 7);
+						const isAllowedType =
+							album.album_type !== "single" ||
+							user.settings.email.singles;
+
+						return isRecent && isAllowedType;
 					})
 				);
 
