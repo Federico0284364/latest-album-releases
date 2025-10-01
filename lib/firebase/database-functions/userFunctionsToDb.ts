@@ -1,6 +1,6 @@
 
 import { db } from "@/lib/firebase/firestore";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, getDoc, doc } from "firebase/firestore";
 import type { MyUser } from "@/models/user";
 
 
@@ -24,3 +24,10 @@ export async function saveUserDataToDb(user: MyUser) {
 	}
 }
 
+export async function getUserDataFromDb(userId: string){
+	const docRef = doc(db, "users", userId);
+	const docSnap = getDoc(docRef);
+	const userData = (await docSnap).data() as MyUser;
+
+	return userData;
+}

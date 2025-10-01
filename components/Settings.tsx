@@ -3,7 +3,7 @@
 import { useSpotifyStore } from "@/store/store";
 import { ReactNode } from "react";
 import type { Settings } from "@/models/settings";
-import { saveSettingsToDb } from "@/lib/firebase/database-functions/settingFunctionsToDb";
+import { saveSettingToDb } from "@/lib/firebase/database-functions/settingFunctionsToDb";
 import LogoutButton from "./CustomLogoutButton";
 
 type SectionProps = {
@@ -37,7 +37,7 @@ export default function Settings() {
 		if (!user) return;
 
 		updateSetting(section, key, value);
-		await saveSettingsToDb(user.uid, section, key, value);
+		await saveSettingToDb(user.uid, section, key, value);
 	}
 
 	return (
@@ -55,7 +55,7 @@ export default function Settings() {
 					onChange={handleSettingChange}
 				/>
 
-				{settings.email.weeklyEmails && <Setting
+				{settings?.email?.weeklyEmails && <Setting
 					settingSection={"email"}
 					settingKey={"singles"}
 					settingValue={settings?.email?.singles ?? false}

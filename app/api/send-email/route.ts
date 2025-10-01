@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
 	sevenDaysAgo.setDate(today.getDate() - 7);
 
 	try {
-		const users = await getAllUsersFromDbAdmin();
+		const users = (await getAllUsersFromDbAdmin()) as MyUser[];
 
 		if (!users || users.length === 0) {
 			return NextResponse.json(
@@ -38,8 +38,9 @@ export async function GET(req: NextRequest) {
 				return {
 					uid: user.uid,
 					email: user.email,
-					name: user.displayName,
+					displayName: user.displayName,
 					followedArtists: followedArtists as Artist[],
+					settings: user.settings,
 				} as MyUser;
 			})
 		);
@@ -63,15 +64,25 @@ export async function GET(req: NextRequest) {
 
 				newAlbums.push(
 					...albums.filter((album) => {
+						if (!album.release_date) return false;
+
 						const releaseDate = new Date(album.release_date);
-						return isWithinLastDays(releaseDate, 7);
+						if (isNaN(releaseDate.getTime())) return false;
+
+						const isRecent = isWithinLastDays(releaseDate, 7);
+						const isAllowedType =
+							album.album_type !== "single" ||
+							user.settings.email.singles;
+
+						return isRecent && isAllowedType;
 					})
 				);
 
 				oldAlbums.push(
 					...albums.filter((album) => {
 						const releaseDate = new Date(album.release_date);
-						return !isWithinLastDays(releaseDate, 365);
+						!isWithinLastDays(releaseDate, 365) &&
+							releaseDate < new Date();
 					})
 				);
 			}

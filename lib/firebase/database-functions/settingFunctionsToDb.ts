@@ -1,23 +1,27 @@
 import { db } from "../firestore";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { collection, doc, getDocs, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import type { Settings } from "@/models/settings";
+import type { MyUser } from "@/models/user";
 
-export async function saveSettingsToDb<
+export async function saveSettingToDb<
 	S extends Extract<keyof Settings, string>,
 	K extends keyof Settings[S]
 >(userId: string, section: S, key: K, value: Settings[S][K]) {
-	const settingRef = doc(db, "users", userId, "settings", section);
-	await setDoc(settingRef, { [key]: value }, { merge: true });
+	const userRef = doc(db, "users", userId);
+	const fieldPath = `settings.${section}.${String(key)}`;
+	await updateDoc(userRef, { [fieldPath]: value });
 }
 
 export async function getSettingsFromDb(userId: string) {
-	const settingsRef = collection(db, "users", userId, "settings");
-	const settingsSnap = await getDocs(settingsRef);
-	const settingsArray = settingsSnap.docs.map((setting) => setting.data());
+	const userRef = doc(db, "users", userId);
+	const userSnap = await getDoc(userRef);
+
+	if (!userSnap.exists()) {
+		throw new Error(`User with id '${userId}' not found in Firestore.`);
+	}
+
+	const user = userSnap.data() as MyUser;
+	const settings: Settings = user.settings;
 	
-	const settings: Record<string, any> = {};
-  settingsSnap.docs.forEach(docSnap => {
-    settings[docSnap.id] = docSnap.data();
-  });
-	return settings as Settings;
+	return settings;
 }

@@ -7,7 +7,14 @@ export function makeDatePretty(date: Date) {
 }
 
 export function isWithinLastDays(releaseDate: Date, days = 7): boolean {
-  const today = new Date();
-  const cutoff = new Date(today.getTime() - days * 24 * 60 * 60 * 1000);
-  return releaseDate >= cutoff && releaseDate <= today;
+	const today = new Date();
+	today.setHours(0, 0, 0, 0); // normalizza oggi a mezzanotte
+
+	const cutoff = new Date(today);
+	cutoff.setDate(cutoff.getDate() - days);
+
+	const normalizedReleaseDate = new Date(releaseDate);
+	normalizedReleaseDate.setHours(0, 0, 0, 0);
+
+	return normalizedReleaseDate >= cutoff && normalizedReleaseDate <= today;
 }
