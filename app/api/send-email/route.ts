@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
 	sevenDaysAgo.setDate(today.getDate() - 7);
 
 	try {
-		const users = await getAllUsersFromDbAdmin();
+		const users = (await getAllUsersFromDbAdmin()) as MyUser[];
 
 		if (!users || users.length === 0) {
 			return NextResponse.json(
@@ -38,8 +38,9 @@ export async function GET(req: NextRequest) {
 				return {
 					uid: user.uid,
 					email: user.email,
-					name: user.displayName,
+					displayName: user.displayName,
 					followedArtists: followedArtists as Artist[],
+					settings: user.settings,
 				} as MyUser;
 			})
 		);
@@ -71,7 +72,8 @@ export async function GET(req: NextRequest) {
 				oldAlbums.push(
 					...albums.filter((album) => {
 						const releaseDate = new Date(album.release_date);
-						return !isWithinLastDays(releaseDate, 365);
+						!isWithinLastDays(releaseDate, 365) &&
+							releaseDate < new Date();
 					})
 				);
 			}

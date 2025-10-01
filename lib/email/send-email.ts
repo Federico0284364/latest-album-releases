@@ -39,7 +39,7 @@ export async function sendEmail(user: MyUser, newAlbums: Album[], oldAlbums: Alb
 
 	if (newAlbums.length) {
 		html = `
-    <h2>Good morning, ${user.name}</h2>
+    <h2>Good morning, ${user.displayName}</h2>
     <p>This is what came out in the last week:</p>
     <ul>
       ${albumsListHTML}
@@ -48,9 +48,9 @@ export async function sendEmail(user: MyUser, newAlbums: Album[], oldAlbums: Alb
   `;
 	} else {
 		html = `
-    <h2>Good morning, ${user.name}</h2>
+    <h2>Good morning, ${user.displayName}</h2>
     <p>Unfortunately nothing came out last week :(</p>
-    <p>In the meantime you can always take a trip down memory lane with these records:</p>
+    <p>Until the next drop, you can enjoy these timeless records:</p>
     <ul>
       ${albumsListHTML}
     </ul>

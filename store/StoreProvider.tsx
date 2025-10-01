@@ -8,10 +8,13 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase/firestore";
 import { getToken } from "@/lib/spotify/getToken";
 import { getFollowedArtistsFromDb } from "@/lib/firebase/database-functions/artistFunctionsToDb";
-import { saveUserDataToDb } from "@/lib/firebase/database-functions/userFunctionsToDb";
+import {
+	getUserDataFromDb,
+	saveUserDataToDb,
+} from "@/lib/firebase/database-functions/userFunctionsToDb";
 import {
 	getSettingsFromDb,
-	saveSettingsToDb,
+	saveSettingToDb,
 } from "@/lib/firebase/database-functions/settingFunctionsToDb";
 import { defaultSettings, Settings } from "@/models/settings";
 
@@ -67,7 +70,27 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 				defaultSettings,
 				settingsFromDb
 			);
-			
+
+			for (const sectionKey in defaultSettings) {
+				const section = sectionKey as keyof Settings;
+				const defaultSection = defaultSettings[section];
+				const dbSection = settingsFromDb?.[section] ?? {};
+
+				for (const key in defaultSection) {
+					const settingKey = key as keyof typeof defaultSection;
+
+					if (dbSection[settingKey] === undefined) {
+						const value = defaultSection[settingKey];
+						await saveSettingToDb(
+							userId,
+							section,
+							settingKey,
+							value
+						);
+					}
+				}
+			}
+
 			setSettings(settings);
 		}
 
@@ -76,11 +99,14 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 	}, [user]);
 
 	useEffect(() => {
-		const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-			if (!currentUser) {
+		const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+			if (!currentUser || !currentUser.uid) {
 				resetStore();
+				setUser(null);
+			} else {
+				const myUser = await getUserDataFromDb(currentUser.uid);
+				setUser(myUser);
 			}
-			setUser(currentUser);
 		});
 		return () => unsubscribe();
 	}, []);
