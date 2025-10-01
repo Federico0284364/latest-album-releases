@@ -81,7 +81,7 @@ export async function GET(req: NextRequest) {
 				oldAlbums.push(
 					...albums.filter((album) => {
 						const releaseDate = new Date(album.release_date);
-						!isWithinLastDays(releaseDate, 365)
+						return !isWithinLastDays(releaseDate, 365)
 					})
 				);
 			}
