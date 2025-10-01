@@ -43,7 +43,7 @@ export default function LatestReleases() {
 
 			{filteredNewAlbums.length ? (
 				<div className="w-full flex flex-col">
-					<ul className="flex flex-wrap gap-2 sm:gap-2 justify-between sm:justify-start mx-auto">
+					<ul className="flex flex-wrap gap-2 sm:gap-2 justify-between sm:justify-start">
 						{filteredNewAlbums.slice(0, 20).map((album, index) => {
 							let showDate;
 							const today = new Date();
@@ -53,7 +53,7 @@ export default function LatestReleases() {
 							if (index === 0 && isWithinLastDays(albumDate, 7)){
 								showDate = 'Last 7 days'
 							} else if (
-								(!isWithinLastDays(albumDate, 7) && (isWithinLastDays(lastAlbumDate, 7))) || (albumDate.getMonth() !== lastAlbumDate.getMonth()) 
+								(!isWithinLastDays(albumDate, 7) && (isWithinLastDays(lastAlbumDate, 7))) || (!isWithinLastDays(albumDate, 7) && albumDate.getMonth() !== lastAlbumDate.getMonth()) 
 							) {
 								showDate =  albumDate.toLocaleDateString('en-US', {month: 'long'})
 							}
