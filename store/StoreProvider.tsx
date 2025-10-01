@@ -13,7 +13,7 @@ import {
 	getSettingsFromDb,
 	saveSettingsToDb,
 } from "@/lib/firebase/database-functions/settingFunctionsToDb";
-import { Settings } from "@/models/settings";
+import { defaultSettings, Settings } from "@/models/settings";
 
 export default function StoreProvider({ children }: { children: ReactNode }) {
 	const user = useSpotifyStore((state) => state.user);
@@ -62,7 +62,12 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 		}
 
 		async function fetchSettings(userId: string) {
-			const settings: Settings = await getSettingsFromDb(userId);
+			const settingsFromDb: Settings = await getSettingsFromDb(userId);
+			const settings: Settings = mergeSettingsWithDefaults(
+				defaultSettings,
+				settingsFromDb
+			);
+			
 			setSettings(settings);
 		}
 
@@ -81,4 +86,31 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 	}, []);
 
 	return <>{children}</>;
+}
+
+function mergeSettingsWithDefaults<T>(defaults: T, provided: Partial<T>): T {
+	const result: any = Array.isArray(defaults) ? [] : {};
+
+	for (const key in defaults) {
+		if (Object.prototype.hasOwnProperty.call(defaults, key)) {
+			const defaultValue = defaults[key];
+			const providedValue = provided?.[key];
+
+			if (
+				defaultValue &&
+				typeof defaultValue === "object" &&
+				!Array.isArray(defaultValue)
+			) {
+				result[key] = mergeSettingsWithDefaults(
+					defaultValue,
+					providedValue || {}
+				);
+			} else {
+				result[key] =
+					providedValue !== undefined ? providedValue : defaultValue;
+			}
+		}
+	}
+
+	return result as T;
 }
