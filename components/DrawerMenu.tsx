@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import MenuButton from "./MenuButton";
 import Card from "./Card";
 import { AnimatePresence, motion } from "framer-motion";
+import { twMerge } from "tailwind-merge";
 
 type Props = {
 	children: ReactNode;
@@ -31,7 +32,7 @@ export default function DrawerMenu({ children, className }: Props) {
   }, [isOpen]);
 
 	return (
-		<div className={className}>
+		<div className={twMerge('z-1000', className)}>
 			<MenuButton onClick={handleClick} isOpen={isOpen}/>
 
 			<AnimatePresence>
