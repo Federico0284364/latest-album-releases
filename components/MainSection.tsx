@@ -4,7 +4,7 @@ import Input from "./Input";
 import Button from "./Button";
 import ArtistCard from "./ArtistCard";
 import { useSpotifyStore } from "@/store/store";
-import { useState, useTransition, useMemo, useEffect } from "react";
+import { useState, useTransition, useMemo, useEffect, useRef } from "react";
 import { ChangeEvent } from "react";
 import { getArtist } from "@/lib/spotify/getArtist";
 import Spinner from "./Spinner";
@@ -16,6 +16,7 @@ import SpotifyLogo from "./SpotifyLogo";
 import ScrollToTopButton from "./ScrollToTopButton";
 
 export default function MainSection() {
+	const inputRef = useRef<HTMLInputElement>(null);
 	const [albumFilter, setAlbumFilter] = useState<AlbumType>("any");
 	const [isFetchingArtist, startFetchingArtist] = useTransition();
 	const [inputValue, setInputvalue] = useState("");
@@ -85,6 +86,12 @@ export default function MainSection() {
 		setInputHasChanged(true);
 	}
 
+	function handleResetInput() {
+		setInputvalue("");
+		inputRef.current?.focus();
+		setInputHasChanged(true);
+	}
+
 	return (
 		<>
 			{/* <Button className="text-lg" onClick={handleSendEmail}>
@@ -94,6 +101,8 @@ export default function MainSection() {
 			<h1 className="text-xl ">Search for an artist to follow</h1>
 
 			<Input
+			ref={inputRef}
+				onReset={handleResetInput}
 				onChange={handleInput}
 				value={inputValue}
 				onKeyDown={(e) => {
@@ -103,11 +112,7 @@ export default function MainSection() {
 					}
 				}}
 			/>
-			<SpotifyLogo
-				variant="green"
-				text="Data provided by"
-				
-			/>
+			<SpotifyLogo variant="green" text="Data provided by" />
 			<Button
 				className="mb-2 text-lg "
 				onClick={handleSearchArtist}
