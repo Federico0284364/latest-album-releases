@@ -12,8 +12,8 @@ This is a Next.js web application that allows users to discover and follow their
 
 ## Tech Stack
 
-- [Next.js](https://nextjs.org/) - React framework for server-side rendering and static site generation  
+- [Next.js](https://nextjs.org/) - React framework for server-side rendering and serverless functions
 - [Firestore](https://firebase.google.com/products/firestore) - NoSQL cloud database  
 - [Spotify Web API](https://developer.spotify.com/documentation/web-api/) - Retrieve artist and album information  
 - [Firebase Authentication](https://firebase.google.com/products/auth) - Google user login  
-- Backend serverless functions for sending email digests  
+- [Cron-job.org](https://cron-job.org) - Scheduled API calls for automated email digests
