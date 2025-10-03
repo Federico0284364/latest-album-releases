@@ -1,27 +1,49 @@
 "use client";
 
 import { Artist } from "@/models/artist";
+import { getAuth } from "firebase/auth";
 
 type ArtistData = {
-	name?: string,
-	id?: string
-}
+  name?: string;
+  id?: string;
+};
 
-export async function getArtist({name, id}: ArtistData) {
-	try {
-		let artist: Artist;
+export async function getArtist({ name, id }: ArtistData): Promise<Artist | undefined> {
+  if (!id && !name) {
+    console.warn("getArtist chiamato senza id né name");
+    return undefined;
+  }
 
-		if (id){
-			const res = await fetch(`/api/spotify/artist?id=${id}`);
-			artist = await res.json();
-		} else {
-			const res = await fetch(`/api/spotify/artist?name=${name}`)
-			artist = await res.json();
-		}
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
 
-		return { ...artist } as Artist;
-	} catch (error) {
-		console.error("Errore nel fetch artista:", error);
-		return undefined;
-	}
+    if (!user) {
+      console.warn("Utente non loggato");
+      return undefined;
+    }
+
+    const token = await user.getIdToken();
+
+    const url = id
+      ? `/api/spotify/artist?id=${encodeURIComponent(id)}`
+      : `/api/spotify/artist?name=${encodeURIComponent(name!)}`;
+
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      console.error("Errore nel fetch artista:", res.status, await res.text());
+      return undefined;
+    }
+
+    const artist: Artist = await res.json();
+    return artist;
+  } catch (error) {
+    console.error("Errore nel fetch artista:", error);
+    return undefined;
+  }
 }

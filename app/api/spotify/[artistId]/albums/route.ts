@@ -1,9 +1,27 @@
 import { NextResponse } from "next/server";
+import { getAuth } from "firebase-admin/auth";
+import { adminApp } from "@/lib/firebase/admin/firebaseAdmin";
 
 export async function GET(
 	req: Request,
 	{ params }: { params: Promise<{ artistId: string }> }
 ) {
+	const authHeader = req.headers.get("authorization");
+	if (!authHeader?.startsWith("Bearer ")) {
+		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+	}
+
+	const idToken = authHeader.split(" ")[1];
+
+	try {
+		const decodedToken = await getAuth(adminApp).verifyIdToken(idToken);
+		const uid = decodedToken.uid;
+		// l'utente è autenticato, procedi
+		console.log("Utente loggato:", uid);
+	} catch (error) {
+		return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+	}
+
 	const artistId = (await params).artistId;
 	if (!artistId) {
 		return NextResponse.json(

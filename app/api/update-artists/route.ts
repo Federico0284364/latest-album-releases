@@ -9,6 +9,11 @@ function sleep(ms: number) {
 }
 
 export async function GET(req: NextRequest) {
+	const authHeader = req.headers.get("authorization");
+	if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+	}
+
 	try {
 		const stateRef = adminDb.collection("state").doc("batch");
 		const stateSnap = await stateRef.get();
@@ -35,13 +40,17 @@ export async function GET(req: NextRequest) {
 
 		// Aggiorna lo stato con l'ID dell'ultimo artista processato
 		if (artistDocs.length === 0) {
-      lastUpdatedId = "";
-      await stateRef.set({ lastUpdatedId });
-      return NextResponse.json({ status: "done", updated: 0, reset: true });
-    }
+			lastUpdatedId = "";
+			await stateRef.set({ lastUpdatedId });
+			return NextResponse.json({
+				status: "done",
+				updated: 0,
+				reset: true,
+			});
+		}
 
-    lastUpdatedId = artistDocs[artistDocs.length - 1].id;
-    await stateRef.set({ lastUpdatedId });
+		lastUpdatedId = artistDocs[artistDocs.length - 1].id;
+		await stateRef.set({ lastUpdatedId });
 
 		return NextResponse.json({ status: "ok", updated: artistDocs.length });
 	} catch (error: any) {

@@ -1,6 +1,24 @@
 import { NextResponse } from "next/server";
+import { getAuth } from "firebase-admin/auth";
+import { adminApp } from "@/lib/firebase/admin/firebaseAdmin";
 
 export async function GET(req: Request) {
+	const authHeader = req.headers.get("authorization");
+	if (!authHeader?.startsWith("Bearer ")) {
+		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+	}
+
+	const idToken = authHeader.split(" ")[1];
+
+	try {
+		const decodedToken = await getAuth(adminApp).verifyIdToken(idToken);
+		const uid = decodedToken.uid;
+		// l'utente è autenticato, procedi
+		console.log("Utente loggato:", uid);
+	} catch (error) {
+		return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+	}
+
 	const { searchParams } = new URL(req.url);
 	const artistId = searchParams.get("id");
 	const artistName = searchParams.get("name");
@@ -73,10 +91,6 @@ export async function GET(req: Request) {
 			);
 		}
 
-		
-
-		
-
 		return NextResponse.json(artist);
 	} catch (error) {
 		console.error("Errore nella chiamata:", error);
@@ -87,9 +101,11 @@ export async function GET(req: Request) {
 	}
 }
 
-async function checkResponse(res: Response){
+async function checkResponse(res: Response) {
 	if (!res || !res.ok) {
-			console.error("Errore Spotify:", await res.text());
-			 throw new Error(`Spotify error: ${res.status} 'Can't retrieve artist's data`);
-		}
+		console.error("Errore Spotify:", await res.text());
+		throw new Error(
+			`Spotify error: ${res.status} 'Can't retrieve artist's data`
+		);
+	}
 }
