@@ -26,18 +26,18 @@ export default function Input({
 	}
 
 	return (
-		<div className="relative z-[0]">
+		<div className="relative z-[0] w-[80%]">
 			{value && (
 				<ResetButton
 					onReset={handleReset}
 					className={
-						"bg-transparent hover:bg-dark hover:text-white px-3 text-dark text-xl border-none absolute right-6"
+						"bg-transparent hover:bg-dark hover:text-white px-3 text-dark text-xl border-none absolute right-0"
 					}
 				/>
 			)}
 			<input
 				ref={ref}
-				className="text-xl rounded-full py-1 px-2 bg-white text-black w-[90%] text-center"
+				className="text-xl rounded-full py-1 px-10 bg-white text-black w-full text-center"
 				value={value}
 				onChange={(e) => onChange(e)}
 				{...props}
