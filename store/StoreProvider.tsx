@@ -4,7 +4,7 @@ import { Album } from "@/models/album";
 import { Artist } from "@/models/artist";
 import { useSpotifyStore } from "./store";
 import { ReactNode, useEffect } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/lib/firebase/firestore";
 import { getToken } from "@/lib/spotify/getToken";
 import { getFollowedArtistsFromDb } from "@/lib/firebase/database-functions/artistFunctionsToDb";
@@ -17,6 +17,7 @@ import {
 	saveSettingToDb,
 } from "@/lib/firebase/database-functions/settingFunctionsToDb";
 import { defaultSettings, Settings } from "@/models/settings";
+import type { MyUser } from "@/models/user";
 
 export default function StoreProvider({ children }: { children: ReactNode }) {
 	const user = useSpotifyStore((state) => state.user);
@@ -104,12 +105,22 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 				resetStore();
 				setUser(null);
 			} else {
-				const myUser = await getUserDataFromDb(currentUser.uid);
-				if (myUser === undefined) {
-					setUser(currentUser);
-				} else {
-					setUser(myUser);
+				await saveUserDataToDb(currentUser);
+				let myUser: any = await getUserDataFromDb(
+					currentUser.uid
+				);
+				if (!myUser) {
+					myUser = {
+						uid: currentUser.uid,
+						displayName: currentUser.displayName || "",
+						email: currentUser.email || "",
+						followedArtists: [],
+						settings: defaultSettings,
+					};
+					await saveUserDataToDb(myUser);
+					console.log(myUser);
 				}
+				setUser(myUser);
 			}
 		});
 		return () => unsubscribe();
