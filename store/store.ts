@@ -9,14 +9,14 @@ import { MyUser } from "@/models/user";
 import type { Settings } from "@/models/settings";
 
 type SpotifyStore = {
-	user: MyUser | null;
+	user: MyUser | User | null;
 	settings: Settings;
 	inputValue: string;
 	selectedArtist?: Artist;
 	followedArtistsList: Artist[];
 	newAlbums: Album[];
 
-	setUser(user: MyUser | null): void;
+	setUser(user: MyUser | User | null): void;
 	setSettings(settings: Settings): void;
 	updateSetting<S extends keyof Settings, K extends keyof Settings[S]>(
 		section: S,
@@ -34,7 +34,7 @@ type SpotifyStore = {
 };
 
 export const useSpotifyStore = create<SpotifyStore>((set, get) => {
-	function setUser(user: MyUser | null): void {
+	function setUser(user: MyUser | User|  null): void {
 		set({ user });
 	}
 

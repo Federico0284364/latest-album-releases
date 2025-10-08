@@ -105,7 +105,11 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 				setUser(null);
 			} else {
 				const myUser = await getUserDataFromDb(currentUser.uid);
-				setUser(myUser);
+				if (myUser === undefined) {
+					setUser(currentUser);
+				} else {
+					setUser(myUser);
+				}
 			}
 		});
 		return () => unsubscribe();

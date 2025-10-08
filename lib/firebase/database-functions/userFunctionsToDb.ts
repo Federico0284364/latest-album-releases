@@ -2,9 +2,10 @@
 import { db } from "@/lib/firebase/firestore";
 import { setDoc, getDoc, doc } from "firebase/firestore";
 import type { MyUser } from "@/models/user";
+import type { User } from "firebase/auth";
 
 
-export async function saveUserDataToDb(user: MyUser) {
+export async function saveUserDataToDb(user: MyUser | User) {
 	try {
 		const docRef = doc(db, "users", user.uid);
 
