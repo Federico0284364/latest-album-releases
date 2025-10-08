@@ -7,7 +7,7 @@ export default function UserGreeting() {
 	const user = useSpotifyStore((state) => state.user);
 
 	return (
-		<Link href="/settings">
+		<Link href="/">
 			<h1 className="text-fg text-xl sm:text-2xl mr-10">{`${getGreeting()}, ${user?.displayName?.split(" ")[0]}`}</h1>
 			
 		</Link>
