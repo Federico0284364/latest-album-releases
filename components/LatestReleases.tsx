@@ -65,7 +65,7 @@ export default function LatestReleases() {
 							} else if (
 								(!isWithinLastDays(albumDate, 7) && (isWithinLastDays(lastAlbumDate, 7))) || (!isWithinLastDays(albumDate, 7) && albumDate.getMonth() !== lastAlbumDate.getMonth()) 
 							) {
-								showDate =  albumDate.toLocaleDateString('en-US', {month: 'long'})
+								showDate =  albumDate.toLocaleDateString('en-US', {month: 'long', year: 'numeric'})
 							}
 
 							return (
