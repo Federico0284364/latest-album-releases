@@ -5,6 +5,8 @@ import { ReactNode } from "react";
 import type { Settings } from "@/models/settings";
 import { saveSettingToDb } from "@/lib/firebase/database-functions/settingFunctionsToDb";
 import LogoutButton from "./CustomLogoutButton";
+import Card from "./Card";
+import LogInWarning from "./LoginWarning";
 
 type SectionProps = {
 	title: string;
@@ -29,6 +31,14 @@ export default function Settings() {
 	const user = useSpotifyStore((state) => state.user);
 	const settings = useSpotifyStore((state) => state.settings);
 	const updateSetting = useSpotifyStore((state) => state.updateSetting);
+
+	if (!user) {
+		return (
+			<LogInWarning>
+				Log in to change your settings
+			</LogInWarning>
+		);
+	}
 
 	async function handleSettingChange<
 		S extends keyof Settings,
@@ -55,17 +65,19 @@ export default function Settings() {
 					onChange={handleSettingChange}
 				/>
 
-				{settings?.email?.weeklyEmails && <Setting
-					settingSection={"email"}
-					settingKey={"singles"}
-					settingValue={settings?.email?.singles ?? false}
-					name={"Singles/EP"}
-					description={
-						"Enable to receive e-mails about new singles, EPs and albums. If you disable this option, you will only be notified about new albums."
-					}
-					type="checkbox"
-					onChange={handleSettingChange}
-				/>}
+				{settings?.email?.weeklyEmails && (
+					<Setting
+						settingSection={"email"}
+						settingKey={"singles"}
+						settingValue={settings?.email?.singles ?? false}
+						name={"Singles/EP"}
+						description={
+							"Enable to receive e-mails about new singles, EPs and albums. If you disable this option, you will only be notified about new albums."
+						}
+						type="checkbox"
+						onChange={handleSettingChange}
+					/>
+				)}
 			</Section>
 			{user && <LogoutButton />}
 		</>

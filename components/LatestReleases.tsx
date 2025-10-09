@@ -7,8 +7,10 @@ import { filterAlbumsBy } from "@/lib/utils/query-albums/filters";
 import SpotifyLogo from "./SpotifyLogo";
 import { Album } from "@/models/album";
 import { isWithinLastDays } from "@/lib/utils/date";
+import LogInWarning from "./LoginWarning";
 
 export default function LatestReleases() {
+	const user = useSpotifyStore(state => state.user)
 	const newAlbums = useSpotifyStore((state) => state.newAlbums);
 	const [filter, setFilter] = useState<
 		"" | "album" | "single" | "compilation"
@@ -16,6 +18,14 @@ export default function LatestReleases() {
 	const filteredNewAlbums = useMemo(() => {
 		return filterAlbumsBy.album_type(newAlbums, filter);
 	}, [filter, newAlbums]);
+
+	if (!user) {
+			return (
+				<LogInWarning>
+					Log in to see the latest music releases
+				</LogInWarning>
+			);
+		}
 
 	return (
 		<>
