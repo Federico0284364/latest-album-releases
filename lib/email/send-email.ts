@@ -3,7 +3,11 @@ import { Album } from "@/models/album";
 import type { MyUser } from "@/models/user";
 import { Artist } from "@/models/artist";
 
-export async function sendEmail(user: MyUser, newAlbums: Album[], oldAlbums: Album[]) {
+export async function sendEmail(
+	user: MyUser,
+	newAlbums: Album[],
+	oldAlbums: Album[]
+) {
 	const to = user.email;
 	if (!to) {
 		console.warn(`Utente ${user.uid} senza email, salto invio`);
@@ -12,28 +16,39 @@ export async function sendEmail(user: MyUser, newAlbums: Album[], oldAlbums: Alb
 
 	const subject = "Weekly new releases report ";
 
-  const albumsList = newAlbums.length ? newAlbums : oldAlbums;
+	const unsubscribeUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/settings`
+
+	const albumsList = newAlbums.length ? newAlbums : oldAlbums;
 	let albumsListHTML: string = "";
 
-		albumsListHTML = albumsList
-    .map((album) => {
-      return `
+	albumsListHTML = albumsList
+		.map((album) => {
+			return `
         <li>
           <a href="${album.external_urls.spotify}">
 						<div style="display:flex">
-							<img src="${album.images[0]?.url || ''}" alt="${album.name}" style="width:100px; vertical-align:middle; margin-right:10px; margin-bottom:12px" />
+							<img src="${album.images[0]?.url || ""}" alt="${
+				album.name
+			}" style="width:100px; vertical-align:middle; margin-right:10px; margin-bottom:12px" />
 							<div>
 								<strong>${album.name}</strong>
 								<p>by ${album.artists[0]?.name || "Unknown artist"}</p>
-								<p> ${newAlbums.length ? '' : new Date(album.release_date).toLocaleDateString('it-IT', {year: 'numeric'})}</p>
+								<p> ${
+									newAlbums.length
+										? ""
+										: new Date(
+												album.release_date
+										  ).toLocaleDateString("it-IT", {
+												year: "numeric",
+										  })
+								}</p>
 							</div>
 						</div>
           </a>
         </li>
       `;
-    })
-    .join("");
-	
+		})
+		.join("");
 
 	let html: string = "";
 
@@ -45,6 +60,7 @@ export async function sendEmail(user: MyUser, newAlbums: Album[], oldAlbums: Alb
       ${albumsListHTML}
     </ul>
     <p>🎶 Happy listening!</p>
+		<a href="${unsubscribeUrl}" style="color:#1DB954;">Unsubscribe</a>.
   `;
 	} else {
 		html = `
@@ -55,6 +71,9 @@ export async function sendEmail(user: MyUser, newAlbums: Album[], oldAlbums: Alb
       ${albumsListHTML}
     </ul>
     <p>🎶 Happy listening!</p>
+		<p style="font-size:0.9em; color:gray;">
+    <a href="${unsubscribeUrl}" style="color:#1DB954;">Unsubscribe</a>.
+  	</p>
   `;
 	}
 
