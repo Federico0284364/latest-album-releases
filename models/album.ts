@@ -28,6 +28,7 @@ export interface Album {
 export enum AlbumGroup {
     Album = "album",
     Single = "single",
+    Compilation = "compilation"
 }
 
 export interface Artist {

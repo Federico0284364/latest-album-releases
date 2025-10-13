@@ -4,6 +4,7 @@ import type { Album } from "@/models/album";
 import { makeDatePretty } from "@/lib/utils/date";
 import { twMerge } from "tailwind-merge";
 import { capitalize } from "@/lib/utils/text";
+import { formatAlbumType } from "@/lib/utils/album-type";
 
 type Props = {
 	album: Album;
@@ -20,10 +21,7 @@ export default function AlbumCard({
 	showAlbumType = false,
 	showArtistName = false,
 }: Props) {
-	let albumType: string = album?.album_type;
-	if (albumType === 'single' && album.total_tracks > 3){
-		albumType = 'EP'
-	}
+	let albumType: string = formatAlbumType(album.album_type, album.total_tracks)
 
 	return (
 		<Card
