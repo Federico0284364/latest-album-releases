@@ -25,6 +25,7 @@ export default function AlbumCard({
 
 	return (
 		<Card
+		data-testid={'card'}
 			className={twMerge("w-60 border-border-muted border-1", className)}
 		>
 			<a href={album.external_urls.spotify} target="__blank">

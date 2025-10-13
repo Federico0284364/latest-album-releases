@@ -57,8 +57,8 @@ describe("AlbumCard", () => {
 			/>
 		);
 
-		const albumTitle = screen.getByText(album.name);
-		expect(albumTitle.closest("div")).toHaveClass("custom-class");
+		const card = screen.getByTestId('card');
+		expect(card).toHaveClass("custom-class");
 	});
 
 	it("formats total_tracks and release_date correctly", () => {
