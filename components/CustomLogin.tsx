@@ -10,7 +10,7 @@ import {
 import { onAuthStateChanged, User } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
-export default function CustomLogButton() {
+export default function CustomLogin() {
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
 	const router = useRouter();
