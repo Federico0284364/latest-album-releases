@@ -47,19 +47,16 @@ export default function FollowedArtists({ className }: Props) {
 	const followedArtistsList = sortArtistsBy[artistsSort](
 		useSpotifyStore((state) => state.followedArtistsList)
 	);
+	const handleFollow = useSpotifyStore((state) => state.handleFollow);
 
 	if (!user) {
-		return (
-			<LogInWarning>Log in to see your followed artists</LogInWarning>
-		);
+		return <LogInWarning>Log in to see your followed artists</LogInWarning>;
 	}
 
 	const albums =
 		sortAlbumsBy
 			.release_date(openArtist?.albums)
 			?.slice(0, numberOfAlbums) ?? [];
-
-	const handleFollow = useSpotifyStore((state) => state.handleFollow);
 
 	async function handleOpenArtist(artist: Artist) {
 		if (openArtist?.id === artist.id) {
@@ -122,10 +119,22 @@ export default function FollowedArtists({ className }: Props) {
 							<li
 								onClick={() => handleOpenArtist(artist)}
 								key={artist.id}
-								className="text-fg bg-medium rounded-2xl border-1 border-border-muted py-2 px-4"
+								className="text-fg bg-medium rounded-2xl border-1 border-border-muted py-3 px-4"
 							>
-								<div className="flex justify-between items-center">
-									<h1 className="text-2xl">{artist.name}</h1>
+								<div className="flex justify-between items-end">
+									<div className="flex gap-4 items-center">
+										<Image
+											src={artist.images[0].url}
+											alt="artist picture"
+											width={40}
+											height={40}
+											className="rounded-full object-cover"
+										/>
+										<h1 className="text-2xl">
+											{artist.name}
+										</h1>
+									</div>
+
 									<ReleaseDate artist={artist} />
 								</div>
 

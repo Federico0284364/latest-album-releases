@@ -87,7 +87,7 @@ export default function Settings() {
 function Section({ title, children }: SectionProps) {
 	return (
 		<section>
-			<h2 className="text-2xl mb-2">{title}</h2>
+			<h2 className="text-lg sm:text-xl mb-2">{title}</h2>
 			{children}
 			<hr className="border-t border-dashed border-border-muted my-4"></hr>
 		</section>
@@ -112,7 +112,7 @@ export function Setting<S extends keyof Settings, K extends keyof Settings[S]>({
 		return (
 			<div className="flex flex-col mb-4">
 				<label className="inline-flex items-center space-x-2">
-					<span className="text-fg/80 mr-4">{name}</span>
+					<span className="text-fg/80 mr-4 text-sm sm:text-md">{name}</span>
 					<input
 						type="checkbox"
 						checked={settingValue}
@@ -127,7 +127,7 @@ export function Setting<S extends keyof Settings, K extends keyof Settings[S]>({
 					/>
 				</label>
 				{description && (
-					<p className="text-gray-500 text-sm">{description}</p>
+					<p className="text-gray-500 text-xs sm:text-sm mt-1">{description}</p>
 				)}
 			</div>
 		);

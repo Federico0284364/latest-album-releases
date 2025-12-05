@@ -29,7 +29,7 @@ export default function LatestReleases() {
 
 	return (
 		<>
-			<div className=" w-fit py-1 px-2 rounded mb-2 gap-2">
+			<div className="w-full py-1 px-2 rounded mb-2 gap-2">
 				<span>Filter: </span>
 				<select
 					className="bg-medium text-white p-2 rounded ml-2"
@@ -52,8 +52,8 @@ export default function LatestReleases() {
 			</div>
 
 			{filteredNewAlbums.length ? (
-				<div className="w-full flex flex-col">
-					<ul className="flex flex-wrap gap-2 sm:gap-2 justify-between sm:justify-start">
+				<div className="w-full flex flex-col items-center">
+					<ul className="flex flex-wrap gap-2 sm:gap-2 justify-center lg:justify-start w-full max-w-100 sm:max-w-200 lg:max-w-full">
 						{filteredNewAlbums.slice(0, 20).map((album, index) => {
 							let showDate;
 							const today = new Date();
@@ -70,12 +70,12 @@ export default function LatestReleases() {
 
 							return (
 								<Fragment key={"new album" + album.id}>
-									{showDate && <p className="w-full border-1 border-border text-xl bg-highlight rounded-sm px-2 py-1 mt-8 mb-2">{showDate}</p>}
+									{showDate && <p className="w-full max-w-100 sm:max-w-full border-1 border-border text-xl bg-highlight rounded-sm px-2 py-1 mt-8 mb-2">{showDate}</p>}
 									<AlbumCard
 										showAlbumType={!filter || filter === 'single'}
 										album={album}
 										imageSrc={album.images?.[0]?.url}
-										className="w-[calc(50%-0.4rem)] sm:w-[calc(33%-0.5rem)] md:w-[calc(25%-0.5rem)] lg:w-[calc(20%-0.5rem)] xl:w-[calc(17%-0.8rem)]"
+										className="w-full sm:w-[calc(50%-0.5rem)] md:w-[calc(50%-0.5rem)] lg:w-[calc(33%-0.5rem)] xl:w-[calc(25%-0.6rem)]"
 										showArtistName={true}
 										key={"new-album" + album.id}
 									/>
