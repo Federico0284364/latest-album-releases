@@ -13,6 +13,8 @@ type Props = {
 	className?: string;
 	showAlbumType?: boolean;
 	showArtistName?: boolean;
+	showCard?: boolean;
+	showReleaseDate?: boolean;
 };
 
 export default function AlbumCard({
@@ -21,6 +23,8 @@ export default function AlbumCard({
 	className,
 	showAlbumType = false,
 	showArtistName = false,
+	showCard = true,
+	showReleaseDate = true,
 }: Props) {
 	let albumType: string = formatAlbumType(
 		album.album_type,
@@ -32,7 +36,8 @@ export default function AlbumCard({
 			data-testid={"card"}
 			className={twMerge(
 				"w-full border-border-muted border-1",
-				className
+				className, 
+				!showCard && 'contents'
 			)}
 		>
 			{HorizontalContent()}
@@ -68,15 +73,15 @@ export default function AlbumCard({
 						</p>
 					)}
 					<h2 className="text-lg mt-2 text-fg">{album.name}</h2>
-					<ul className={showArtistName ? "mb-2" : "mb-2"}>
+					<ul className={twMerge( showArtistName ? "mb-2" : "mb-2")}>
 						{showArtistName &&
 							album.artists.map((artist, index) => (
 								<span
 									key={"album card" + artist.id}
-									className="text-sm text-fg-muted"
+									className="text-sm text-fg-muted overflow-ellipsis"
 								>
 									{index > 0 && <span>, </span>}
-									<span>{artist.name}</span>
+									<span className="overflow-ellipsis whitespace-nowrap">{artist.name}</span>
 								</span>
 							))}
 					</ul>
@@ -86,9 +91,9 @@ export default function AlbumCard({
 							{album.total_tracks +
 								(album.total_tracks > 1 ? " tracks" : " track")}
 						</span>
-						<span className="text-xs sm:text-md">
+						{showReleaseDate && <span className="text-xs sm:text-md">
 							{makeDatePretty(new Date(album.release_date))}
-						</span>
+						</span>}
 					</p>
 				</div>
 			</a>

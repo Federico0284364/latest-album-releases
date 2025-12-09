@@ -12,13 +12,14 @@ import { isToday, makeDatePretty } from "@/lib/utils/date";
 import Notification from "./Notification";
 import { sortArtistsBy } from "@/lib/utils/query-artists/sorting";
 import LogInWarning from "./LoginWarning";
+import AlbumCard from "./AlbumCard";
 
 type Props = {
 	className?: string;
 };
 
 export default function FollowedArtists({ className }: Props) {
-	useEffect(() => {
+	/* useEffect(() => {
 		let size;
 		function handleResize() {
 			if (window.innerWidth > 640) {
@@ -34,9 +35,9 @@ export default function FollowedArtists({ className }: Props) {
 
 		// pulizia evento
 		return () => window.removeEventListener("resize", handleResize);
-	}, []);
+	}, []); */
 
-	const [numberOfAlbums, setNumberOfAlbums] = useState<number>();
+	const [numberOfAlbums, setNumberOfAlbums] = useState<number>(1);
 	const [openArtist, setOpenArtist] = useState<Artist>();
 	const [unfollowedArtist, setUnfollowedArtist] = useState<Artist>();
 	const [artistsSort, setArtistsSort] = useState<"release_date" | "name">(
@@ -113,7 +114,7 @@ export default function FollowedArtists({ className }: Props) {
 					</select>
 				</div>
 
-				<motion.ul className="flex flex-col gap-1 w-[90vw] max-w-140">
+				<motion.ul className="flex flex-col gap-1 w-[90vw] max-w-100">
 					{followedArtistsList?.map((artist) => {
 						return (
 							<li
@@ -122,7 +123,7 @@ export default function FollowedArtists({ className }: Props) {
 								className="text-fg bg-medium rounded-2xl border-1 border-border-muted py-3 px-4"
 							>
 								<div className="flex justify-between items-end">
-									<div className="flex gap-4 items-center">
+									<div className="flex gap-5 items-center">
 										<Image
 											src={artist.images[0].url}
 											alt="artist picture"
@@ -130,7 +131,7 @@ export default function FollowedArtists({ className }: Props) {
 											height={40}
 											className="rounded-full object-cover"
 										/>
-										<h1 className="text-2xl">
+										<h1 className="text-xl">
 											{artist.name}
 										</h1>
 									</div>
@@ -162,42 +163,13 @@ export default function FollowedArtists({ className }: Props) {
 											}}
 											className="flex flex-col mt-4 items-center"
 										>
-											<ul className="grid sm:grid-cols-4 grid-cols-3 border-border p-6 gap-8">
-												{albums?.map((album) => {
+											<ul className="w-[85%]">
+												{albums.map((album) => {
 													return (
 														<li
 															key={"a" + album.id}
 														>
-															<a
-																className="flex-col flex"
-																href={
-																	album
-																		.external_urls
-																		.spotify
-																}
-															>
-																<Image
-																	width={100}
-																	height={100}
-																	className="w-full mb-2 rounded-sm"
-																	src={
-																		album
-																			.images[0]
-																			.url
-																	}
-																	alt={`${album.id} album cover`}
-																/>
-																<h3 className="text-md sm:text-lg break-words overflow-ellipsis line-clamp-4">
-																	{album.name}
-																</h3>
-																<p className="text-sm text-fg-muted">
-																	{makeDatePretty(
-																		new Date(
-																			album.release_date
-																		)
-																	)}
-																</p>
-															</a>
+															<AlbumCard album={album} imageSrc={album.images[0].url} showAlbumType={true} showCard={false} showReleaseDate={false}/>
 														</li>
 													);
 												})}

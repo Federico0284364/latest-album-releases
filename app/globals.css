@@ -90,4 +90,26 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.scrolling-text {
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
+}
+
+.scrolling-text span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: scroll 10s linear infinite;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+
 

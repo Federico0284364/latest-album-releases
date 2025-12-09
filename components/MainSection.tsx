@@ -101,7 +101,7 @@ export default function MainSection() {
 			<h1 className="text-xl ">Search for an artist to follow</h1>
 
 			<Input
-			ref={inputRef}
+				ref={inputRef}
 				onReset={handleResetInput}
 				onChange={handleInput}
 				value={inputValue}
@@ -140,12 +140,13 @@ export default function MainSection() {
 								key={selectedArtist.id}
 								imageSrc={selectedArtist.images[0].url}
 							/>
-							<ul className="grid grid-cols-1 sm:grid-cols-2  gap-4 justify-center">
+							<ul className="grid grid-cols-1 gap-4 justify-center">
 								{selectedArtist.albums
 									?.slice(0, 19)
 									.map((album) => {
 										return (
 											<AlbumCard
+												showAlbumType={true}
 												key={"/" + album.id}
 												className="w-full"
 												imageSrc={album.images[0].url}
