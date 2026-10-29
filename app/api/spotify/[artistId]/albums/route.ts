@@ -4,9 +4,9 @@ import { adminApp } from "@/lib/firebase/admin/firebaseAdmin";
 
 export async function GET(
 	req: Request,
-	{ params }: { params: Promise<{ artistId: string }> }
+	{ params }: { params: Promise<{ artistId: string }> },
 ) {
-	const authHeader = req.headers.get("authorization");
+	/* const authHeader = req.headers.get("authorization");
 	if (!authHeader?.startsWith("Bearer ")) {
 		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 	}
@@ -20,13 +20,13 @@ export async function GET(
 		console.log("Utente loggato:", uid);
 	} catch (error) {
 		return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-	}
+	} */
 
 	const artistId = (await params).artistId;
 	if (!artistId) {
 		return NextResponse.json(
 			{ error: "Missing artist id" },
-			{ status: 400 }
+			{ status: 400 },
 		);
 	}
 
@@ -38,17 +38,17 @@ export async function GET(
 			`${process.env.NEXT_PUBLIC_BASE_URL}/api/spotify-token`,
 			{
 				method: "POST",
-			}
+			},
 		);
 
 		if (!tokenRes.ok) {
 			console.error(
 				"Errore nel recuperare il token:",
-				await tokenRes.text()
+				await tokenRes.text(),
 			);
 			return NextResponse.json(
 				{ error: "Failed to get token" },
-				{ status: 500 }
+				{ status: 500 },
 			);
 		}
 
@@ -61,14 +61,14 @@ export async function GET(
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
 				},
-			}
+			},
 		);
 
 		if (!spotifyRes.ok) {
 			console.error("Errore Spotify:", await spotifyRes.text());
 			return NextResponse.json(
 				{ error: "Can't retrieve artist's albums data" },
-				{ status: spotifyRes.status }
+				{ status: spotifyRes.status },
 			);
 		}
 
@@ -78,7 +78,7 @@ export async function GET(
 		console.error("Errore nella chiamata:", error);
 		return NextResponse.json(
 			{ error: "Internal Server Error" },
-			{ status: 500 }
+			{ status: 500 },
 		);
 	}
 }

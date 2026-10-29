@@ -3,7 +3,7 @@ import { getAuth } from "firebase-admin/auth";
 import { adminApp } from "@/lib/firebase/admin/firebaseAdmin";
 
 export async function GET(req: Request) {
-	const authHeader = req.headers.get("authorization");
+	/* const authHeader = req.headers.get("authorization");
 	if (!authHeader?.startsWith("Bearer ")) {
 		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 	}
@@ -17,16 +17,16 @@ export async function GET(req: Request) {
 		console.log("Utente loggato:", uid);
 	} catch (error) {
 		return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-	}
+	} */
 
 	const { searchParams } = new URL(req.url);
 	const artistId = searchParams.get("id");
 	const artistName = searchParams.get("name");
 
-	if (!artistName) {
+	if (!artistName && !artistId) {
 		return NextResponse.json(
-			{ error: "Missing artist name" },
-			{ status: 400 }
+			{ error: "Missing artist name or ID" },
+			{ status: 400 },
 		);
 	}
 
@@ -35,17 +35,17 @@ export async function GET(req: Request) {
 			`${process.env.NEXT_PUBLIC_BASE_URL}/api/spotify-token`,
 			{
 				method: "POST",
-			}
+			},
 		);
 
 		if (!tokenRes.ok) {
 			console.error(
 				"Errore nel recuperare il token:",
-				await tokenRes.text()
+				await tokenRes.text(),
 			);
 			return NextResponse.json(
 				{ error: "Failed to get token" },
-				{ status: 500 }
+				{ status: 500 },
 			);
 		}
 
@@ -61,7 +61,7 @@ export async function GET(req: Request) {
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
 					},
-				}
+				},
 			);
 
 			checkResponse(spotifyRes);
@@ -71,13 +71,13 @@ export async function GET(req: Request) {
 		} else if (artistName) {
 			const spotifyRes = await fetch(
 				`https://api.spotify.com/v1/search?q=${encodeURIComponent(
-					artistName
+					artistName,
 				)}&type=artist`,
 				{
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
 					},
-				}
+				},
 			);
 
 			checkResponse(spotifyRes);
@@ -87,7 +87,7 @@ export async function GET(req: Request) {
 		} else {
 			return NextResponse.json(
 				{ error: "Missing artist identificator code" },
-				{ status: 400 }
+				{ status: 400 },
 			);
 		}
 
@@ -96,7 +96,7 @@ export async function GET(req: Request) {
 		console.error("Errore nella chiamata:", error);
 		return NextResponse.json(
 			{ error: "Internal Server Error" },
-			{ status: 500 }
+			{ status: 500 },
 		);
 	}
 }
@@ -105,7 +105,7 @@ async function checkResponse(res: Response) {
 	if (!res || !res.ok) {
 		console.error("Errore Spotify:", await res.text());
 		throw new Error(
-			`Spotify error: ${res.status} 'Can't retrieve artist's data`
+			`Spotify error: ${res.status} 'Can't retrieve artist's data`,
 		);
 	}
 }
